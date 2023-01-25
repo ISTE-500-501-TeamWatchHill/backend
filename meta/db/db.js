@@ -1,8 +1,11 @@
+import * as dotenv from 'dotenv'
+dotenv.config()
+
 // Connect to DB and create global var
 // Do NOT save this file with your credentials inside
 let userName = ``;
 let userPass = ``;
-let db = connect(`mongodb+srv://${userName}:${userPass}@cluster0.q3cfthr.mongodb.net/test`)
+let db = connect(`mongodb+srv://${dotenv.USER}:${dotenv.PASSWORD}@cluster0.q3cfthr.mongodb.net/test`)
 
 // Create universityInfo collection and add data
 db.universityInfo.insertMany(
