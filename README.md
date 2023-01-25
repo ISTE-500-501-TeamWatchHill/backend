@@ -8,7 +8,7 @@ git clone https://github.com/ISTE-500-501-TeamWatchHill/backend.git && cd ./back
 
 ##### Set up config and credentials
 ```
-cp ../.env.example ./env
+cp ./.env.example ./.env
 ```
 
 ##### Run app
