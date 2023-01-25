@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const mongoString = process.env.DATABASE_URL;
 let bodyParser = require('body-parser');
 const CookieParser = require('cookie-parser');
-const port = 5000;
+const port =  process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());
