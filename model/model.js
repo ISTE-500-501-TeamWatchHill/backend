@@ -64,7 +64,7 @@ const teamInfoSchema = new mongoose.Schema({
     },
     logo: {
         required: false,
-        type: Image
+        type: String
     },
     approvalStatus: {
         required: false,
@@ -90,7 +90,7 @@ const universityInfoSchema = new mongoose.Schema({
     },
     logo: {
         required: false,
-        type: Image
+        type: String
     },
     description: {
         required: false,
@@ -101,7 +101,7 @@ const universityInfoSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     }
-}, {collection: "userInfo"});
+}, {collection: "universityInfo"});
 
 const userInfoSchema = new mongoose.Schema({
     uid: {
