@@ -13,5 +13,5 @@ cp ./.env.example ./.env
 
 ##### Run app
 ```
-nodemon app.js
+npm start index.js
 ```
