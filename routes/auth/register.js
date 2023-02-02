@@ -1,43 +1,65 @@
 const express = require('express');
 const router = express.Router();
-const { User } = require('../model/model');
+const { UserInfo, UniversityInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
-let ObjectId = require("bson-objectid");
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
 router.post('/', async (req, res) => {
-    // Our login logic starts here
+    // Our register logic starts here
     try {
-        // Get user input
-        const { email, password } = req.body;
+        const { uid, firstName, lastName, email, password } = req.body;
 
-        // Validate user input
-        if (!(email && password)) {
-            res.status(400).send("All input is required");
-        }
-        // Validate if user exist in our database
-        const user = await User.findOne({ email });
+        if (uid && uid > 0 && firstName && firstName.length > 0 && lastName && lastName.length > 0 && email && email.length > 0 && password && password.length > 0) {
+            // email needs to end in an approved domain
+            const emailDomain = email.split('@')[1];
+            const domain = await UniversityInfo.findOne({ 'domain': emailDomain }, {});
+            if (domain) {
+                // Validate if user exist in our database
+                const oldUser = await UserInfo.findOne({ email });
 
-        if (user && (await bcrypt.compare(password, user.password))) {
-            // Create token
-            const token = jwt.sign(
-                { user_id: user._id, email },
-                process.env.TOKEN_KEY,
-                {
-                    expiresIn: "24h",
+                if (oldUser) {
+                    return res.status(409).send("User Already Exist. Please Login");
                 }
-            );
 
-            // save user token
-            user.token = token;
+                const { universityID } = domain;
 
-            // user
-            res.status(200).json({ token: user.token });
+                //Encrypt user password
+                let hashedPassword = await bcrypt.hash(password, 10);
+
+                // Fix roleID
+                // Create user in database
+                const user = await UserInfo.create({
+                    uid,
+                    firstName,
+                    lastName,
+                    roleID: 00000,
+                    universityID,
+                    email: email.toLowerCase(), // Sanitization
+                    hashedPassword
+                });
+
+                // Create token
+                const token = jwt.sign(
+                    { user_id: user._id, email },
+                    process.env.TOKEN_KEY,
+                    {
+                        expiresIn: "24h",
+                    }
+                );
+                // save user token
+                user.token = token;
+                // return new user
+                res.status(201).json({ token: user.token });
+            }
+            else {
+                // check this status code..
+                res.status(403).json({ 'error': 'Email Domain Does Not Match Accepted' });
+            }
         }
         else {
-            res.status(400).send("Invalid Credentials");
-
+            // check this status code..
+            res.status(403).json({ 'error': 'All Input Not Found, Please Check Your Request' });
         }
     } catch (err) {
         console.log(err);

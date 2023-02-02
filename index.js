@@ -27,6 +27,8 @@ db.once('connected', () => {
 
 // Route Imports
 const defaultRoute = require('./routes/default.js');
+const loginRoutes = require('./routes/auth/login.js');
+const registerRoutes = require('./routes/auth/register.js');
 const userRoutes = require('./routes/user/userRoutes.js');
 const universityRoutes = require('./routes/university/universityRoutes.js');
 const teamRoutes = require('./routes/team/teamRoutes.js');
@@ -35,6 +37,8 @@ const gameRoutes = require('./routes/game/gameRoutes.js');
 
 // Route Definitions
 app.use('/', defaultRoute);
+app.use('/login', loginRoutes);
+app.use('/register', registerRoutes);
 app.use('/user', userRoutes);
 app.use('/university', universityRoutes);
 app.use('/team', teamRoutes);

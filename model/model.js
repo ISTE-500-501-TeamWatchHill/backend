@@ -78,6 +78,10 @@ const universityInfoSchema = new mongoose.Schema({
         required: true,
         type: Number
     },
+    domain: {
+        required: true,
+        type: String
+    },
     moderatorIDs: {
         userID: {
             required: true,

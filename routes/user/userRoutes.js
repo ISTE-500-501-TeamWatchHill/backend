@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { UserInfo } = require('../../model/model');
+const { UserInfo, UniversityInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
 let ObjectId = require("bson-objectid");
 
@@ -19,6 +19,12 @@ router.get('/', async (req, res) => {
     else {
         res.status(400).json({'error': 'Request must contain user ID'})
     }
+});
+
+// Get all users that are not verified
+router.get('/unverified', async (req, res) => {
+    // Error Checking
+    const users = await UserInfo.findMany({}, {hashedPassword: 0});
 });
 
 module.exports = router;
