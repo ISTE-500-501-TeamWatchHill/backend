@@ -20,3 +20,8 @@ nodemon app.js
 ```
 npm run test
 ```
+
+##### How to run API tests
+```
+follow instructions in __tests__/api/api_spec.js
+```
