@@ -15,3 +15,13 @@ cp ./.env.example ./.env
 ```
 nodemon app.js
 ```
+
+##### How to run API tests
+```
+npm run test
+```
+
+##### How to run API tests
+```
+follow instructions in __tests__/api/api_spec.js
+```
