@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { UserInfo, UniversityInfo } = require('../../model/model');
+const { UserInfo, Permissions } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
 let ObjectId = require("bson-objectid");
 
@@ -25,6 +25,36 @@ router.get('/', async (req, res) => {
 router.get('/unverified', async (req, res) => {
     // Error Checking
     const users = await UserInfo.findMany({}, {hashedPassword: 0});
+});
+
+// Change user permission definition
+router.put('/permission', async (req, res) => {
+    // Make sure requesting user is an admin
+    const reqUser = await UserInfo.findOne({_id: ObjectId(req.user.user_id)}, {roleID: 1});
+
+    if (reqUser && reqUser.roleID && reqUser.roleID == 1234 || reqUser.roleID == 2468) {
+        console.log('success');
+
+        if (req.body.uid) {
+            const updUser = await UserInfo.findOne({_id: ObjectId(req.body.uid)});
+
+            if (updUser) {
+                const updatedData = {
+                    roleID: req.body.roleID
+                };
+
+                UserInfo.updateOne({_id: ObjectId(req.body.uid)}, updatedData, function (err, result) {
+                    if (err !== null) {
+                        res.status(500).json(err);
+                    }
+                    else {
+                        res.status(200).json({"_id": id, "newID": req.body.roleID});
+                    }
+                });
+            }
+        }
+        
+    }
 });
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { User } = require('../../model/model');
+const { UserInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
 let ObjectId = require("bson-objectid");
 const bcrypt = require('bcrypt')
@@ -10,16 +10,17 @@ router.post('/', async (req, res) => {
     // Our login logic starts here
     try {
         // Get user input
-        const { email, password } = req.body;
+        let { email, password } = req.body;
+        email = email.toLowerCase();
 
         // Validate user input
         if (!(email && password)) {
             res.status(400).send("All input is required");
         }
         // Validate if user exist in our database
-        const user = await User.findOne({ email });
+        const user = await UserInfo.findOne({ email });
 
-        if (user && (await bcrypt.compare(password, user.password))) {
+        if (user && (await bcrypt.compareSync(password, user.hashedPassword, 10))) {
             // Create token
             const token = jwt.sign(
                 { user_id: user._id, email },
@@ -41,6 +42,7 @@ router.post('/', async (req, res) => {
         }
     } catch (err) {
         console.log(err);
+        res.status(500).send('Server Error Occurred');
     }
     // Our register logic ends here
 });
