@@ -40,11 +40,11 @@ const gameRoutes = require('./routes/game/gameRoutes.js');
 app.use('/', defaultRoute);
 app.use('/login', loginRoutes);
 app.use('/register', registerRoutes);
-app.use('/user', auth, userRoutes);
-app.use('/university', auth, universityRoutes);
-app.use('/team', auth, teamRoutes);
-app.use('/permission', permissionRoutes);
-app.use('/game', auth, gameRoutes);
+app.use('/users', auth, userRoutes);
+app.use('/universities', auth, universityRoutes);
+app.use('/teams', auth, teamRoutes);
+app.use('/permissions', permissionRoutes);
+app.use('/games', auth, gameRoutes);
 
 app.listen(port, () => {
   console.log(`App listening on port ${port} 🙃`);
