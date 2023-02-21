@@ -27,9 +27,24 @@ db.once('connected', () => {
 
 // Route Imports
 const defaultRoute = require('./routes/default.js');
+const auth = require('./routes/auth/auth.js');
+const loginRoutes = require('./routes/auth/login.js');
+const registerRoutes = require('./routes/auth/register.js');
+const userRoutes = require('./routes/user/userRoutes.js');
+const universityRoutes = require('./routes/university/universityRoutes.js');
+const teamRoutes = require('./routes/team/teamRoutes.js');
+const permissionRoutes = require('./routes/permissions/permissionRoutes.js');
+const gameRoutes = require('./routes/game/gameRoutes.js');
 
 // Route Definitions
 app.use('/', defaultRoute);
+app.use('/login', loginRoutes);
+app.use('/register', registerRoutes);
+app.use('/users', auth, userRoutes);
+app.use('/universities', auth, universityRoutes);
+app.use('/teams', auth, teamRoutes);
+app.use('/permissions', permissionRoutes);
+app.use('/games', auth, gameRoutes);
 
 app.listen(port, () => {
   console.log(`App listening on port ${port} 🙃`);
