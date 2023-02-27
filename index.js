@@ -1,4 +1,5 @@
 require('dotenv').config();
+const cors = require('cors');
 
 const express = require('express');
 const app = express();
@@ -24,6 +25,8 @@ db.on('error', (error) => {
 db.once('connected', () => {
     console.log('Database Connected');
 })
+
+app.use(cors({ origin : '*'}));
 
 // Route Imports
 const defaultRoute = require('./routes/default.js');
