@@ -48,9 +48,15 @@ router.post('/', async (req, res) => {
                     }
                 );
                 // save user token
-                user.token = token;
+                const userReturned = {
+                    "firstName": user.firstName,
+                    "lastName": user.lastName,
+                    "email": user.email,
+                    "token": token,
+                };
+
                 // return new user
-                res.status(201).json({ token: user.token });
+                res.status(201).json({ user: userReturned });
             }
             else {
                 // check this status code..

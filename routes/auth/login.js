@@ -31,10 +31,15 @@ router.post('/', async (req, res) => {
             );
 
             // save user token
-            user.token = token;
+            const userReturned = {
+                "firstName": user.firstName,
+                "lastName": user.lastName,
+                "email": user.email,
+                "token": token,
+            };
 
             // user
-            res.status(200).json({ token: user.token });
+            res.status(200).json({ user: userReturned });
         }
         else {
             res.status(400).send("Invalid Credentials");
