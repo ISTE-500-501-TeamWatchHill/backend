@@ -8,9 +8,9 @@ const jwt = require('jsonwebtoken')
 router.post('/', async (req, res) => {
     // Our register logic starts here
     try {
-        const { uid, firstName, lastName, email, password } = req.body;
+        const { uid, firstName, lastName, email, canMarket, password } = req.body;
 
-        if (uid && uid > 0 && firstName && firstName.length > 0 && lastName && lastName.length > 0 && email && email.length > 0 && password && password.length > 0) {
+        if (uid && uid > 0 && firstName && firstName.length > 0 && lastName && lastName.length > 0 && email && email.length > 0 && canMarket && password && password.length > 0) {
             // email needs to end in an approved domain
             const emailDomain = email.split('@')[1];
             const domain = await UniversityInfo.findOne({ 'domain': emailDomain }, {});
@@ -33,9 +33,10 @@ router.post('/', async (req, res) => {
                     uid,
                     firstName,
                     lastName,
-                    roleID: 00000,
+                    roleID: 1234,
                     universityID,
                     email: email.toLowerCase(), // Sanitization
+                    canMarket,
                     hashedPassword
                 });
 
