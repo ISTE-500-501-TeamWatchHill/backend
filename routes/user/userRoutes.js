@@ -36,33 +36,24 @@ router.get('/getMarketable', async (req, res) => {
 router.put('/updateMarketingPreferences', async (req, res) => {
     // fix these damn conditionals they literally do not work
     // check and see if the user requesting is an admin, if so check for the included id or uid.. otherwise take it right out of the token
-    const decoded = jwt.verify(token, config.TOKEN_KEY);
 
-    if (decoded.roleID == 4444 || decoded.roleID == 1111) { // uni admin or company admin
-
-    }
-    else {
-
-    }
-
-
-    if (req.body.uid && req.body.canMarket) {
+    if (req.user.roleID == 4444 || req.user.roleID == 1111) { // uni admin or company admin
         UserInfo.findOneAndUpdate({uid: req.body.uid}, {canMarket: req.body.canMarket}, {upsert: true}, function(err, doc) {
             if (err) return res.send(500, {error: err});
             return res.status(200).json({'success': 'Successfully saved.'});
         });
     }
-    else if (req.body._id && req.body.canMarket) {
-        UserInfo.findOneAndUpdate({_id: ObjectId(req.body._id)}, {canMarket: req.body.canMarket}, {upsert: true}, function(err, doc) {
+    else {
+        UserInfo.findOneAndUpdate({_id: ObjectId(req.user._id)}, {canMarket: req.body.canMarket}, {upsert: true}, function(err, doc) {
             if (err) return res.send(500, {error: err});
             return res.status(200).json({'success': 'Successfully saved.'});
         });
     }
-    else {
-        // todo: lets check on these status codes...
-        console.log(req.body.uid, req.body._id, req.body.canMarket);
-        res.status(500).json({"error": "Missing Inputs"});
-    }
+    // else {
+    //     // todo: lets check on these status codes...
+    //     console.log(req.body.uid, req.body._id, req.body.canMarket);
+    //     res.status(500).json({"error": "Missing Inputs"});
+    // }
 });
 
 // Get all users that are not verified
