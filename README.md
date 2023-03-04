@@ -15,6 +15,19 @@ cp ./.env.example ./.env
 ```
 nodemon app.js
 ```
+
+##### Run tests
+```
+jest
+```
+##### Common issues:
+```
+command not found: jest
+run npm install -g jest
+```
+
+
+
 ## Endpoints
 
 ### Authorization:

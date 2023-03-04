@@ -26,7 +26,7 @@ db.once('connected', () => {
     console.log('Database Connected');
 })
 
-app.use(cors({ origin : '*'}));
+app.use(cors({origin: '*'}));
 
 // Route Imports
 const defaultRoute = require('./routes/default.js');
