@@ -123,17 +123,52 @@ nodemon app.js
 ```
 * Response Body:
 ```
+{
+    "canMarket": [Boolean, can or cannot send marketing emails to this person],
+    "_id": "[String, users mongo doc ID]",
+    "uid": [Integer, users university ID number],
+    "roleID": [Integer, users permission integer (See above)],
+    "universityID": [Integer, ID of users university],
+    "teamID": [Integer, ID of users affiliated team],
+    "firstName": "[String, users first name]",
+    "lastName": "[String, users last name]",
+    "email": "[String, users email]"
+},
+{
+    Same as above, repeat as many times as users are returned
+}
 ```
 #### getUserByID
 * Endpoint: {{host}}/users/byID
 * Method Type: GET
 * Request Body:
 ```
+{
+    "id": "[String, users mongo doc ID]"
+}
+
+OR 
+
+{
+    "uid": [Integer, users university ID]
+}
 ```
 * Response Body:
 ```
+{
+    "canMarket": [Boolean, can or cannot send marketing emails to this person],
+    "_id": "[String, users mongo doc ID]",
+    "uid": [Integer, users university ID number],
+    "roleID": [Integer, users permission integer (See above)],
+    "universityID": [Integer, ID of users university],
+    "teamID": [Integer, ID of users affiliated team],
+    "firstName": "[String, users first name]",
+    "lastName": "[String, users last name]",
+    "email": "[String, users email]"
+}
 ```
 #### updateUserPermission
+[[In Progress]]
 * Endpoint: {{host}}/users/permission
 * Method Type: PUT
 * Request Body:
@@ -141,4 +176,31 @@ nodemon app.js
 ```
 * Response Body:
 ```
+```
+#### updateMarketingPreferences
+* Endpoint: {{host}}/users/updateMarketingPreferences
+* Method Type: PUT
+* Request Body:
+```
+IF Requesting User is an ADMIN:
+{
+    "uid": [Integer, users university ID],
+    "canMarket": [Boolean, value to update with]
+}
+IF Requesting User is NOT AN ADMIN:
+{
+    "canMarket": [Boolean, value to update with]
+}
+```
+* Response Body:
+```
+{
+    "doc": {
+        "acknowledged": [Boolean],
+        "modifiedCount": [Integer],
+        "upsertedId": [String],
+        "upsertedCount": [Integer],
+        "matchedCount": [Integer]
+    }
+}
 ```

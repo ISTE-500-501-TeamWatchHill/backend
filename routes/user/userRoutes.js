@@ -16,6 +16,15 @@ router.get('/byID', async (req, res) => {
             res.status(200).json(user);
         }
     }
+    else if (req.body && req.body.uid) {
+        const user = await UserInfo.findOne({"uid": ObjectId(req.body.uid)}, {hashedPassword: 0});
+        if (user === null) {
+            res.status(400).json({'error': 'No Data Found'});
+        }
+        else {
+            res.status(200).json(user);
+        }
+    }
     else {
         res.status(400).json({'error': 'Request must contain user ID'})
     }
@@ -48,15 +57,15 @@ router.get('/getMarketable', async (req, res) => {
 router.put('/updateMarketingPreferences', async (req, res) => {
     // check and see if the user requesting is an admin, if so check for the included id or uid.. otherwise take it right out of the token
     if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
-        UserInfo.updateOne({uid: req.body.uid}, {canMarket: req.body.canMarket}, {upsert: true}, function(err, doc) {
+        UserInfo.updateOne({uid: req.body.uid}, {canMarket: req.body.canMarket}, function(err, doc) {
             if (err) return res.status(500).json({error: err});
-            return res.status(200).json({'success': 'Successfully saved.'});
+            return res.status(200).json({doc});
         });
     }
     else {
-        UserInfo.updateOne({_id: ObjectId(req.user._id)}, {canMarket: req.body.canMarket}, {upsert: true}, function(err, doc) {
+        UserInfo.updateOne({_id: ObjectId(req.user._id)}, {canMarket: req.body.canMarket}, function(err, doc) {
             if (err) return res.status(500).json({error: err});
-            return res.status(200).json({'success': 'Successfully saved.'});
+            return res.status(200).json({doc});
         });
     }
 });
