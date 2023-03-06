@@ -105,6 +105,24 @@ nodemon app.js
     "gameTime": "[Datetime, stamp of last update to the game]"
 }
 ```
+#### updateGameInfo
+* Endpoint: {{host}}/games
+* Method Type: PUT
+* Request Body:
+```
+```
+* Response Body:
+```
+```
+#### createNewGame
+* Endpoint: {{host}}/games
+* Method Type: POST
+* Request Body:
+```
+```
+* Response Body:
+```
+```
 
 ### Universities:
 #### getAllUniversities

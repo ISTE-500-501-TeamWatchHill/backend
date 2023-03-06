@@ -32,4 +32,14 @@ router.get('/all', async (req, res) => {
     }
 });
 
+// Update game information
+router.put('/', async (req, res) => {
+
+});
+
+// Create new game
+router.post('/', async (req, res) => {
+
+});
+
 module.exports = router;
