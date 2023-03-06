@@ -26,7 +26,11 @@ command not found: jest
 run npm install -g jest
 ```
 
-
+## User Permission Integers:
+* Superadmin: 14139
+* University Admin: 21149
+* Content Moderator: 31514
+* Student / Team Member (General User): 19202
 
 ## Endpoints
 
