@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
                     uid,
                     firstName,
                     lastName,
-                    roleID: 1234,
+                    roleID: 19202,
                     universityID,
                     email: email.toLowerCase(), // Sanitization
                     canMarket,
