@@ -78,13 +78,62 @@ run npm install -g jest
 * Method Type: GET
 * Request Body:
 ```
+{
+
+}
 ```
 * Response Body:
 ```
+[
+    {
+        "_id": "[String, game mongo doc ID]",
+        "gameID": [Integer, ID of game],
+        "universityID": [Integer, ID of university where game is being played],
+        "homeTeam": [Integer, ID of home team],
+        "awayTeam": [Integer, ID of away team],
+        "winningTeam": [Integer, ID (if any) of winning team],
+        "gameFinished": [Boolean, whether or not the game has finished],
+        "gameTime": "[Datetime, stamp of last update to the game]"
+    },
+    {
+        Same as above, repeat for as many records as are available
+    }
+]
 ```
 #### getGameByID
 * Endpoint: {{host}}/games/byID
 * Method Type: GET
+* Request Body:
+```
+{
+    "id": "[String, game mongo doc ID]"
+}
+```
+* Response Body:
+```
+{
+    "_id": "[String, game mongo doc ID]",
+    "gameID": [Integer, ID of game],
+    "universityID": [Integer, ID of university where game is being played],
+    "homeTeam": [Integer, ID of home team],
+    "awayTeam": [Integer, ID of away team],
+    "winningTeam": [Integer, ID (if any) of winning team],
+    "gameFinished": [Boolean, whether or not the game has finished],
+    "gameTime": "[Datetime, stamp of last update to the game]"
+}
+```
+#### updateGameInfo
+* Endpoint: {{host}}/games
+* Method Type: PUT
+* Request Body:
+```
+```
+* Response Body:
+```
+```
+#### createNewGame
+* Endpoint: {{host}}/games
+* Method Type: POST
 * Request Body:
 ```
 ```
