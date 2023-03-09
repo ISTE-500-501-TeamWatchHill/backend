@@ -160,7 +160,22 @@ nodemon app.js
     "__v": 0
 }
 ```
-
+#### deleteGame
+* Endpoint: {{host}}/games
+* Method Type: DELETE
+* Request Body:
+```
+{
+    _id: [String, games mongo doc ID]
+}
+```
+* Response Body:
+```
+{
+    "acknowledged": [Boolean, whether or not the request was processed],
+    "deletedCount": [Integer, how many documents were matched and deleted]
+}
+```
 ### Universities:
 #### getAllUniversities
 * Endpoint: {{host}}/universities/all

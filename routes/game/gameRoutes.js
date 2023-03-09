@@ -87,4 +87,20 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.delete('/', async (req, res) => {
+    if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
+        try {
+            const deleted = await GameInfo.deleteOne({_id: req.body._id});
+            res.status(200).json(deleted);
+        }
+        catch (error) {
+            console.log(error);
+            res.status(500).json({"error": error});
+        }
+    }
+    else {
+        res.status(401).json({'error': "you are not authorized to complete this action"});
+    }
+});
+
 module.exports = router;

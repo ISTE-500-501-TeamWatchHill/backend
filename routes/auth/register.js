@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
                     uid,
                     firstName,
                     lastName,
-                    roleID: 00000,
+                    roleID: 19202,
                     universityID,
                     email: email.toLowerCase(), // Sanitization
                     hashedPassword
@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
 
                 // Create token
                 const token = jwt.sign(
-                    { user_id: user._id, email },
+                    { user_id: user._id, email, roleID: user.roleID },
                     process.env.TOKEN_KEY,
                     {
                         expiresIn: "24h",
