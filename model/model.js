@@ -131,6 +131,11 @@ const userInfoSchema = new mongoose.Schema({
         required: true,
         type: String
     },
+    canMarket: {
+        required: true,
+        type: Boolean,
+        default: false
+    },
     hashedPassword: {
         required: true,
         type: String
