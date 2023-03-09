@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
         if (user && (await bcrypt.compareSync(password, user.hashedPassword, 10))) {
             // Create token
             const token = jwt.sign(
-                { user_id: user._id, email },
+                { user_id: user._id, email, roleID: user.roleID },
                 process.env.TOKEN_KEY,
                 {
                     expiresIn: "24h",

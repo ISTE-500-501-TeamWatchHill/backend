@@ -127,20 +127,72 @@ run npm install -g jest
 * Method Type: PUT
 * Request Body:
 ```
+{
+    _id: [String, games mongo doc ID],
+    updatedData: {
+        <!-- Only include data here that should be updated! Options Include: -->
+        "universityID": [Integer, ID of university where game is being played],
+        "homeTeam": [Integer, ID of home team],
+        "awayTeam": [Integer, ID of away team],
+        "winningTeam": [Integer, ID (if any) of winning team],
+        "gameFinished": [Boolean, whether or not the game has finished],
+        "gameTime": "[Datetime, when the game started or finished]"
+    }
+}
+    
 ```
 * Response Body:
 ```
+{
+    "result": {
+        "acknowledged": [Boolean, whether or not the update passed],
+        "modifiedCount": [Integer, Number of Documents Modified],
+        "upsertedId": [String, ID of new record if upserted],
+        "upsertedCount": [Integer, Number of records upserted],
+        "matchedCount": [Integer, How many records matched the original query]
+    }
+}
 ```
 #### createNewGame
 * Endpoint: {{host}}/games
 * Method Type: POST
 * Request Body:
 ```
+{
+    "universityID": [Integer, ID of university],
+    "homeTeam": [String, mongo doc ID of home team],
+    "awayTeam": [String, mongo doc ID of away team]
+}
 ```
 * Response Body:
 ```
+{
+    "_id": [String, mongo doc ID of game],
+    "universityID": [Integer, id of university],
+    "homeTeam": [String, mongo doc ID of home team],
+    "awayTeam": [String, mongo doc ID of away team]
+    "winningTeam": [String (Null on insert), mongo doc ID of winning team],
+    "gameFinished": [Boolean, whether or not the game is finished],
+    "gameTime": [Datetime, when the game started or finished],
+    "__v": 0
+}
 ```
-
+#### deleteGame
+* Endpoint: {{host}}/games
+* Method Type: DELETE
+* Request Body:
+```
+{
+    _id: [String, games mongo doc ID]
+}
+```
+* Response Body:
+```
+{
+    "acknowledged": [Boolean, whether or not the request was processed],
+    "deletedCount": [Integer, how many documents were matched and deleted]
+}
+```
 ### Universities:
 #### getAllUniversities
 * Endpoint: {{host}}/universities/all

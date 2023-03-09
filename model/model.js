@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
-const ObjectId = mongoose.Schema.Types.ObjectId
 
 const gameInfoSchema = new mongoose.Schema({
     gameID: {
-        required: true,
+        required: false,
         type: Number
     },
     universityID: {
@@ -12,15 +11,15 @@ const gameInfoSchema = new mongoose.Schema({
     },
     homeTeam: {
         required: true,
-        type: Number
+        type: String
     },
     awayTeam: {
         required: true,
-        type: Number
+        type: String
     },
     winningTeam: {
-        required: true,
-        type: Number
+        required: false,
+        type: String
     },
     gameFinished: {
         required: false,
@@ -44,10 +43,6 @@ const permissionsSchema = new mongoose.Schema({
 }, {collection: "permissions"});
 
 const teamInfoSchema = new mongoose.Schema({
-    teamID: {
-        required: true,
-        type: Number
-    },
     universityID: {
         required: true,
         type: Number
@@ -55,7 +50,7 @@ const teamInfoSchema = new mongoose.Schema({
     players: {
         userID: {
             required: true,
-            type: Number
+            type: String
         }
     },
     description: {
@@ -85,7 +80,7 @@ const universityInfoSchema = new mongoose.Schema({
     moderatorIDs: {
         userID: {
             required: true,
-            type: Number
+            type: String
         }
     },
     name: {
@@ -122,7 +117,7 @@ const userInfoSchema = new mongoose.Schema({
     },
     teamID: {
         required: false,
-        type: Number
+        type: String
     },
     firstName: {
         required: true,
