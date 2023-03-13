@@ -26,5 +26,30 @@ function validateEmail(email) {
     return !!(email.match(/^(?:[a-zA-Z\d][a-zA-Z\d_-]{5,10}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})$/));
 }
 
+function validateUniversityID(universityID) {
+    // check if null
+    // check if integer
+}
+
+function validateTeamID(teamID) {
+    // check if null
+    // check if [a-z0-9], length greater than 0, is a string
+}
+
+function validateUserID(teamID) {
+    // check if null
+    // check if [a-z0-9], length greater than 0, is a string
+}
+
+function validateMarketable(isMarketable) {
+    // check if null
+    // check if isMarketable is of type boolean and is set to either true or false
+}
+
+function validateName(name) {
+    // check if null
+    // check if name is of type string, has a length greater than 0, and only contains alphanumeric characters
+}
+
 
 module.exports = { validateEmail, validatePassword };
