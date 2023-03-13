@@ -9,6 +9,7 @@
 //          3a. allowed -> ~$`!@#%^&*()_-+={[}]|\:;"'<,>.?/
 //          3b. not allowed -> any whitespace
 function validatePassword(password) {
+    if (typeof password !== 'string' || !(password instanceof String)) return false;
     if (password.length >= 8 && password.match(/^[a-zA-Z0-9~$`!@#%^&*()_\-+={[\]}\|\\:;"'<,>.?/]*$/)) {
         return !!(password.match(/[a-z]/) && password.match(/[A-Z]/) && password.match(/\d/) && password.match(/[~$`!@#%^&*()_\-+={[\]}\|\\:;"'<,>.?/]/));
     } else {
@@ -23,6 +24,7 @@ function validatePassword(password) {
 //      4. followed by a period (.)
 //      5. followed by 2 or more characters [a-zA-Z]
 function validateEmail(email) {
+    if (typeof password !== 'string' || !(password instanceof String)) return false;
     return !!(email.match(/^(?:[a-zA-Z\d][a-zA-Z\d_-]{5,10}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})$/));
 }
 
@@ -46,9 +48,15 @@ function validateMarketable(isMarketable) {
     // check if isMarketable is of type boolean and is set to either true or false
 }
 
+// Validates university, teams and people names; follows the following rules:
+//      1. must be a string
+//      2. must have a length greater than or equal to 1
+//      3. must not begin or end with a whitespace character
+//      4. name must only contain [a-zA-Z0-9,.'\-\s] (one or more times)
 function validateName(name) {
-    // check if null
-    // check if name is of type string, has a length greater than 0, and only contains alphanumeric characters
+    if (typeof password !== 'string' || !(password instanceof String)) return false;
+    if (name.length < 1 || name.match(/^\s|^\w+\s$|\s$/)) return false
+    return !!(name.match(/[a-zA-Z0-9,.'\-\s]+/));
 }
 
 
