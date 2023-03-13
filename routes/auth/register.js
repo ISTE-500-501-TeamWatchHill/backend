@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
         if (uid && uid > 0 && firstName && firstName.length > 0 && lastName && lastName.length > 0 && email && email.length > 0 && canMarket && password && password.length > 0) {
             // validate all input before adding to db
             if (!validateUniversityID(uid)) {
-                res.status(403).json({ 'error': 'University Invalid' });
+                res.status(403).json({ 'error': 'UniversityID Invalid' });
             }
             if (!validateName(firstName)) {
                 res.status(403).json({ 'error': 'First Name Invalid' });

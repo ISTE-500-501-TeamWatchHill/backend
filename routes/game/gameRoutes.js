@@ -2,7 +2,11 @@ const express = require('express');
 const router = express.Router();
 const { GameInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
-const ObjectId = require("bson-objectid");
+const ObjectId = require('bson-objectid');
+const {
+    validateUniversityID,
+    validateTeamID,
+} = require('../auth/validation');
 
 // Get all game information by id
 router.get('/byID', async (req, res) => {
@@ -39,7 +43,7 @@ router.put('/', async (req, res) => {
         const updGame = await GameInfo.findOne({_id: ObjectId(req.body._id)});
 
         if (updGame) {
-            const {updatedData} = req.body;
+            const { updatedData } = req.body; // TODO: Validation for this is a mess
             GameInfo.updateOne({_id: updGame._id}, updatedData, function (err, result) {
                 if (err !== null) {
                     res.status(500).json(err);
@@ -62,7 +66,18 @@ router.put('/', async (req, res) => {
 // Create new game
 router.post('/', async (req, res) => {
     if (req.body && req.body.universityID && req.body.homeTeam && req.body.awayTeam) {
-        const {universityID, homeTeam, awayTeam} = req.body;
+        const { universityID, homeTeam, awayTeam } = req.body;
+
+        // validate all input before adding to db
+        if (!validateUniversityID(universityID)) {
+            res.status(403).json({ 'error': 'UniversityID Invalid' });
+        }
+        if (!validateTeamID(homeTeam)) {
+            res.status(403).json({ 'error': 'Home Team ID Invalid' });
+        }
+        if (!validateTeamID(awayTeam)) {
+            res.status(403).json({ 'error': 'Away Team ID Invalid' });
+        }
 
         const data = new GameInfo({
             universityID,

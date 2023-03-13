@@ -33,6 +33,12 @@ function validateUniversityID(universityID) {
     return universityID > 0;
 }
 
+// Validates universityIDs; ensuring input is a number greater than 0
+function validateGameID(gameID) {
+    if (typeof gameID !== 'number') return false;
+    return gameID > 0;
+}
+
 // Validates teamIDs; ensuring input is a string, is not empty, and contains only [a-z0-9] (w/o spaces)
 function validateTeamID(teamID) {
     if (typeof teamID !== 'string') return false;
@@ -63,4 +69,13 @@ function validateName(name) {
     return !!(name.match(/[a-zA-Z0-9,.'\-\s]+/));
 }
 
-module.exports = { validateEmail, validatePassword, validateUniversityID, validateTeamID, validateUserID, validateMarketable, validateName };
+module.exports = { 
+    validateEmail, 
+    validatePassword, 
+    validateUniversityID, 
+    validateTeamID, 
+    validateUserID, 
+    validateMarketable, 
+    validateName, 
+    validateGameID 
+};
