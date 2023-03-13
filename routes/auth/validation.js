@@ -1,4 +1,3 @@
-
 // Validate that user input (or other arguments) passed in meet our criteria
 // Made with the intention of validating form input, request bodies, etc.
 
@@ -28,24 +27,30 @@ function validateEmail(email) {
     return !!(email.match(/^(?:[a-zA-Z\d][a-zA-Z\d_-]{5,10}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})$/));
 }
 
+// Validates universityIDs; ensuring input is a number greater than 0
 function validateUniversityID(universityID) {
-    // check if null
-    // check if integer
+    // if (typeof universityID !== 'number' || !(universityID instanceof Int)) return false; // TODO: Determine which type of Int to use
+    if (typeof universityID !== 'number') return false;
+    return universityID > 0;
 }
 
+// Validates teamIDs; ensuring input is a string, is not empty, and contains only [a-z0-9] (w/o spaces)
 function validateTeamID(teamID) {
-    // check if null
-    // check if [a-z0-9], length greater than 0, is a string
+    if (typeof teamID !== 'string' || !(teamID instanceof String)) return false;
+    if (teamID.length < 1) return false;
+    return !!(teamID.match(/^[a-z0-9]+$/));
 }
 
-function validateUserID(teamID) {
-    // check if null
-    // check if [a-z0-9], length greater than 0, is a string
+// Validates teamIDs; ensuring input is a string, is not empty, and contains only [a-z0-9] (w/o spaces)
+function validateUserID(userID) {
+    if (typeof userID !== 'string' || !(userID instanceof String)) return false;
+    if (userID.length < 1) return false;
+    return !!(userID.match(/^[a-z0-9]+$/));
 }
 
 // Validates isMarketable; ensuring it is a boolean
 function validateMarketable(isMarketable) {
-    return !(typeof isMarketable !== 'boolean' || !(isMarketable instanceof Boolean));
+    return (typeof isMarketable === 'boolean' || isMarketable instanceof Boolean);
 }
 
 // Validates university, team and people names; follows the following rules:
@@ -59,5 +64,4 @@ function validateName(name) {
     return !!(name.match(/[a-zA-Z0-9,.'\-\s]+/));
 }
 
-
-module.exports = { validateEmail, validatePassword };
+module.exports = { validateEmail, validatePassword, validateUniversityID, validateTeamID, validateUserID, validateMarketable, validateName };
