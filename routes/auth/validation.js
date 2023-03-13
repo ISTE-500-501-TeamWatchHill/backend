@@ -8,8 +8,12 @@
 //      3. require special characters (at least 1) -- 
 //          3a. allowed -> ~$`!@#%^&*()_-+={[}]|\:;"'<,>.?/
 //          3b. not allowed -> any whitespace
-function validatePassword(inputPassword) {
-
-};
+function validatePassword(password) {
+    if (password.length >= 8 && password.match(/^[a-zA-Z0-9~$`!@#%^&*()_\-+={[\]}\|\\:;"'<,>.?/]*$/)) {
+        return !!(password.match(/[a-z]/) && password.match(/[A-Z]/) && password.match(/\d/) && password.match(/[~$`!@#%^&*()_\-+={[\]}\|\\:;"'<,>.?/]/));
+    } else {
+        return false;
+    }
+}
 
 module.exports = validatePassword;
