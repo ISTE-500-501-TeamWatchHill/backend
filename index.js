@@ -8,6 +8,7 @@ const mongoString = process.env.DATABASE_URL;
 let bodyParser = require('body-parser');
 const CookieParser = require('cookie-parser');
 const port =  process.env.PORT || 5000;
+const mongoSanitize = require('express-mongo-sanitize');
 
 // Middleware
 app.use(express.json());
@@ -27,6 +28,14 @@ db.once('connected', () => {
 })
 
 app.use(cors({origin: '*'}));
+
+// https://www.npmjs.com/package/express-mongo-sanitize?activeTab=readme
+app.use(
+  mongoSanitize({
+    allowDots: true, // typically forbidden, but we want to allow for emails
+    replaceWith: '_', // replaces forbidden $ with _
+  }),
+);
 
 // Route Imports
 const defaultRoute = require('./routes/default.js');
