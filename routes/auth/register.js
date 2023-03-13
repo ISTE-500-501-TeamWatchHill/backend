@@ -4,7 +4,7 @@ const { UserInfo, UniversityInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const validatePassword = require('./validation');
+const { validateEmail, validatePassword } = require('./validation');
 
 router.post('/', async (req, res) => {
     // Our register logic starts here
@@ -12,13 +12,14 @@ router.post('/', async (req, res) => {
         const { uid, firstName, lastName, email, canMarket, password } = req.body;
 
         if (uid && uid > 0 && firstName && firstName.length > 0 && lastName && lastName.length > 0 && email && email.length > 0 && canMarket && password && password.length > 0) {
+            if (!validateEmail(email)) {
+                res.status(403).json({ 'error': 'Email Invalid' });
+            }
             // email needs to end in an approved domain
             const emailDomain = email.split('@')[1];
             const domain = await UniversityInfo.findOne({ 'domain': emailDomain }, {});
-            console.log("Password input: ", validatePassword(password));
-            if (!validatePassword(password)){
+            if (!validatePassword(password)) {
                 res.status(403).json({ 'error': 'Password Invalid' });
-                console.log("Password input invald: ", password);
             }
             if (domain) {
                 // Validate if user exist in our database

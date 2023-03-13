@@ -16,4 +16,9 @@ function validatePassword(password) {
     }
 }
 
-module.exports = validatePassword;
+function validateEmail(email) {
+    return !!(email.match(/^(?:[a-zA-Z\d][a-zA-Z\d_-]{5,10}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})$/));
+}
+
+
+module.exports = { validateEmail, validatePassword };
