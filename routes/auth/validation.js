@@ -8,7 +8,7 @@
 //          3a. allowed -> ~$`!@#%^&*()_-+={[}]|\:;"'<,>.?/
 //          3b. not allowed -> any whitespace
 function validatePassword(password) {
-    if (typeof password !== 'string' || !(password instanceof String)) return false;
+    if (typeof password !== 'string') return false;
     if (password.length >= 8 && password.match(/^[a-zA-Z0-9~$`!@#%^&*()_\-+={[\]}\|\\:;"'<,>.?/]*$/)) {
         return !!(password.match(/[a-z]/) && password.match(/[A-Z]/) && password.match(/\d/) && password.match(/[~$`!@#%^&*()_\-+={[\]}\|\\:;"'<,>.?/]/));
     } else {
@@ -23,34 +23,33 @@ function validatePassword(password) {
 //      4. followed by a period (.)
 //      5. followed by 2 or more characters [a-zA-Z]
 function validateEmail(email) {
-    if (typeof password !== 'string' || !(password instanceof String)) return false;
+    if (typeof email !== 'string') return false;
     return !!(email.match(/^(?:[a-zA-Z\d][a-zA-Z\d_-]{5,10}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})$/));
 }
 
 // Validates universityIDs; ensuring input is a number greater than 0
 function validateUniversityID(universityID) {
-    // if (typeof universityID !== 'number' || !(universityID instanceof Int)) return false; // TODO: Determine which type of Int to use
     if (typeof universityID !== 'number') return false;
     return universityID > 0;
 }
 
 // Validates teamIDs; ensuring input is a string, is not empty, and contains only [a-z0-9] (w/o spaces)
 function validateTeamID(teamID) {
-    if (typeof teamID !== 'string' || !(teamID instanceof String)) return false;
+    if (typeof teamID !== 'string') return false;
     if (teamID.length < 1) return false;
     return !!(teamID.match(/^[a-z0-9]+$/));
 }
 
 // Validates teamIDs; ensuring input is a string, is not empty, and contains only [a-z0-9] (w/o spaces)
 function validateUserID(userID) {
-    if (typeof userID !== 'string' || !(userID instanceof String)) return false;
+    if (typeof userID !== 'string') return false;
     if (userID.length < 1) return false;
     return !!(userID.match(/^[a-z0-9]+$/));
 }
 
 // Validates isMarketable; ensuring it is a boolean
 function validateMarketable(isMarketable) {
-    return (typeof isMarketable === 'boolean' || isMarketable instanceof Boolean);
+    return (typeof isMarketable === 'boolean');
 }
 
 // Validates university, team and people names; follows the following rules:
@@ -59,8 +58,8 @@ function validateMarketable(isMarketable) {
 //      3. must not begin or end with a whitespace character
 //      4. name must only contain [a-zA-Z0-9,.'\-\s] (one or more times)
 function validateName(name) {
-    if (typeof name !== 'string' || !(name instanceof String)) return false;
-    if (name.length < 1 || name.match(/^\s|^\w+\s$|\s$/)) return false
+    if (typeof name !== 'string') { return false; }
+    if (name.length < 1 || name.match(/^\s|^\w+\s$|\s$/)) return false;
     return !!(name.match(/[a-zA-Z0-9,.'\-\s]+/));
 }
 

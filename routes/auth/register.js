@@ -4,7 +4,13 @@ const { UserInfo, UniversityInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { validateEmail, validatePassword } = require('./validation');
+const { 
+    validateEmail, 
+    validatePassword, 
+    validateUniversityID, 
+    validateMarketable, 
+    validateName 
+} = require('./validation');
 
 router.post('/', async (req, res) => {
     // Our register logic starts here
@@ -12,15 +18,29 @@ router.post('/', async (req, res) => {
         const { uid, firstName, lastName, email, canMarket, password } = req.body;
 
         if (uid && uid > 0 && firstName && firstName.length > 0 && lastName && lastName.length > 0 && email && email.length > 0 && canMarket && password && password.length > 0) {
+            // validate all input before adding to db
+            if (!validateUniversityID(uid)) {
+                res.status(403).json({ 'error': 'University Invalid' });
+            }
+            if (!validateName(firstName)) {
+                res.status(403).json({ 'error': 'First Name Invalid' });
+            }
+            if (!validateName(lastName)) {
+                res.status(403).json({ 'error': 'Last Name Invalid' });
+            }
             if (!validateEmail(email)) {
                 res.status(403).json({ 'error': 'Email Invalid' });
             }
-            // email needs to end in an approved domain
-            const emailDomain = email.split('@')[1];
-            const domain = await UniversityInfo.findOne({ 'domain': emailDomain }, {});
+            if (!validateMarketable(canMarket)) {
+                res.status(403).json({ 'error': 'Marketability Invalid' });
+            }
             if (!validatePassword(password)) {
                 res.status(403).json({ 'error': 'Password Invalid' });
             }
+
+            // email needs to end in an approved domain
+            const emailDomain = email.split('@')[1];
+            const domain = await UniversityInfo.findOne({ 'domain': emailDomain }, {});
             if (domain) {
                 // Validate if user exist in our database
                 const oldUser = await UserInfo.findOne({ email });
