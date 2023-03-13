@@ -43,18 +43,18 @@ function validateUserID(teamID) {
     // check if [a-z0-9], length greater than 0, is a string
 }
 
+// Validates isMarketable; ensuring it is a boolean
 function validateMarketable(isMarketable) {
-    // check if null
-    // check if isMarketable is of type boolean and is set to either true or false
+    return !(typeof isMarketable !== 'boolean' || !(isMarketable instanceof Boolean));
 }
 
-// Validates university, teams and people names; follows the following rules:
+// Validates university, team and people names; follows the following rules:
 //      1. must be a string
 //      2. must have a length greater than or equal to 1
 //      3. must not begin or end with a whitespace character
 //      4. name must only contain [a-zA-Z0-9,.'\-\s] (one or more times)
 function validateName(name) {
-    if (typeof password !== 'string' || !(password instanceof String)) return false;
+    if (typeof name !== 'string' || !(name instanceof String)) return false;
     if (name.length < 1 || name.match(/^\s|^\w+\s$|\s$/)) return false
     return !!(name.match(/[a-zA-Z0-9,.'\-\s]+/));
 }
