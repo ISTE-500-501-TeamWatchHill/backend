@@ -72,7 +72,7 @@ run npm install -g jest
     }
     ```
 
-### Games:
+### Games (Public):
 #### getAllGames
 * Endpoint: {{host}}/games/all
 * Method Type: GET
@@ -122,6 +122,8 @@ run npm install -g jest
     "gameTime": "[Datetime, stamp of last update to the game]"
 }
 ```
+
+### Games (Secure):
 #### updateGameInfo
 * Endpoint: {{host}}/games
 * Method Type: PUT
@@ -193,7 +195,7 @@ run npm install -g jest
     "deletedCount": [Integer, how many documents were matched and deleted]
 }
 ```
-### Universities:
+### Universities (Public):
 #### getAllUniversities
 * Endpoint: {{host}}/universities/all
 * Method Type: GET
@@ -213,7 +215,9 @@ run npm install -g jest
 ```
 ```
 
-### Teams:
+### Universities (Secure):
+
+### Teams (Public):
 #### getAllTeams
 * Endpoint: {{host}}/teams/all
 * Method Type: GET
@@ -261,6 +265,37 @@ run npm install -g jest
     "approvalStatus": [Boolean, whether the team has been approved by an admin]
 }
 ```
+#### getTeamByUniversityID
+* Endpoint: {{host}}/teams/byUniID
+* Method Type: POST
+* Request Body:
+```
+{
+    "universityID": [Integer, university ID number]
+}
+```
+* Response Body:
+```
+{
+    [
+        {
+            "players": [
+                [String, mongo doc ID of player]
+            ],
+            "_id": [String, mongo doc ID of team],
+            "universityID": [Integer, university ID],
+            "description": [String, team descriptions],
+            "logo": [Under Development],
+            "approvalStatus": [Boolean, whether or not the team has been approved]
+        },
+        {
+            Same as above, repeat for as many records as are available
+        }
+    ]
+}
+```
+
+### Teams (Public):
 #### newTeam
 * Endpoint: {{host}}/teams
 * Method Type: POST
@@ -296,37 +331,8 @@ run npm install -g jest
 ```
 
 ```
-#### getTeamByUniversityID
-* Endpoint: {{host}}/teams/byUniID
-* Method Type: POST
-* Request Body:
-```
-{
-    "universityID": [Integer, university ID number]
-}
-```
-* Response Body:
-```
-{
-    [
-        {
-            "players": [
-                [String, mongo doc ID of player]
-            ],
-            "_id": [String, mongo doc ID of team],
-            "universityID": [Integer, university ID],
-            "description": [String, team descriptions],
-            "logo": [Under Development],
-            "approvalStatus": [Boolean, whether or not the team has been approved]
-        },
-        {
-            Same as above, repeat for as many records as are available
-        }
-    ]
-}
-```
 
-### Users:
+### Users (Public):
 #### getAllUsers
 * Endpoint: {{host}}/users/all
 * Method Type: GET
@@ -379,6 +385,8 @@ OR
     "email": "[String, users email]"
 }
 ```
+
+### Users (Secure):
 #### updateUserPermission
 [[In Progress]]
 * Endpoint: {{host}}/users/permission
