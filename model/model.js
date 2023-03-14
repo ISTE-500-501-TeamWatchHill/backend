@@ -44,10 +44,6 @@ const permissionsSchema = new mongoose.Schema({
 }, {collection: "permissions"});
 
 const teamInfoSchema = new mongoose.Schema({
-    teamID: {
-        required: true,
-        type: Number
-    },
     universityID: {
         required: true,
         type: Number

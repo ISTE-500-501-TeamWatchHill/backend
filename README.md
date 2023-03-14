@@ -179,6 +179,35 @@ run npm install -g jest
 * Response Body:
 ```
 ```
+#### getTeamByUniversityID
+* Endpoint: {{host}}/teams/byUniID
+* Method Type: GET
+* Request Body:
+```
+{
+    "universityID": [Integer, university ID number]
+}
+```
+* Response Body:
+```
+{
+    [
+        {
+            "players": [
+                [String, mongo doc ID of player]
+            ],
+            "_id": [String, mongo doc ID of team],
+            "universityID": [Integer, university ID],
+            "description": [String, team descriptions],
+            "logo": [Under Development],
+            "approvalStatus": [Boolean, whether or not the team has been approved]
+        },
+        {
+            Same as above, repeat for as many records as are available
+        }
+    ]
+}
+```
 
 ### Users:
 #### getAllUsers
