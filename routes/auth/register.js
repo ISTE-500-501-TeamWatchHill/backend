@@ -20,22 +20,22 @@ router.post('/', async (req, res) => {
         if (uid && uid > 0 && firstName && firstName.length > 0 && lastName && lastName.length > 0 && email && email.length > 0 && canMarket && password && password.length > 0) {
             // validate all input before adding to db
             if (!validateNonNullNumberID(uid)) {
-                res.status(403).json({ 'error': 'UniversityID Invalid' });
+                res.status(400).json({ 'error': 'UniversityID Invalid' });
             }
             if (!validateName(firstName)) {
-                res.status(403).json({ 'error': 'First Name Invalid' });
+                res.status(400).json({ 'error': 'First Name Invalid' });
             }
             if (!validateName(lastName)) {
-                res.status(403).json({ 'error': 'Last Name Invalid' });
+                res.status(400).json({ 'error': 'Last Name Invalid' });
             }
             if (!validateEmail(email)) {
-                res.status(403).json({ 'error': 'Email Invalid' });
+                res.status(400).json({ 'error': 'Email Invalid' });
             }
             if (!validateIsBoolean(canMarket)) {
-                res.status(403).json({ 'error': 'Marketability Invalid' });
+                res.status(400).json({ 'error': 'Marketability Invalid' });
             }
             if (!validatePassword(password)) {
-                res.status(403).json({ 'error': 'Password Invalid' });
+                res.status(400).json({ 'error': 'Password Invalid' });
             }
 
             // email needs to end in an approved domain

@@ -37,14 +37,6 @@ app.use(
   }),
 );
 
-// https://www.npmjs.com/package/express-mongo-sanitize?activeTab=readme
-app.use(
-  mongoSanitize({
-    allowDots: true, // typically forbidden, but we want to allow for emails
-    replaceWith: '_', // replaces forbidden $ with _
-  }),
-);
-
 // Universal Route Imports
 const defaultRoute = require('./routes/default.js');
 const auth = require('./routes/auth/auth.js');

@@ -12,6 +12,9 @@ const {
 router.put('/', async (req, res) => {
 
     if (req.body && req.body._id) {
+        if(!validateNonNullStringHashID(req.body._id)) {
+            res.status(400).json({'error': 'Game ID provided invalid'});
+        }
         const updGame = await GameInfo.findOne({_id: ObjectId(req.body._id)});
 
         if (updGame) {
@@ -42,13 +45,13 @@ router.post('/', async (req, res) => {
 
         // validate all input before adding to db
         if (!validateNonNullNumberID(universityID)) {
-            res.status(403).json({ 'error': 'UniversityID Invalid' });
+            res.status(400).json({ 'error': 'University ID Invalid' });
         }
         if (!validateNonNullStringHashID(homeTeam)) {
-            res.status(403).json({ 'error': 'Home Team ID Invalid' });
+            res.status(400).json({ 'error': 'Home Team ID Invalid' });
         }
         if (!validateNonNullStringHashID(awayTeam)) {
-            res.status(403).json({ 'error': 'Away Team ID Invalid' });
+            res.status(400).json({ 'error': 'Away Team ID Invalid' });
         }
 
         const data = new GameInfo({
