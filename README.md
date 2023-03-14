@@ -11,6 +11,8 @@ git clone https://github.com/ISTE-500-501-TeamWatchHill/backend.git && cd ./back
 cp ./.env.example ./.env
 ```
 
+Also, message Aidan, Vicky, Alexis, or Aaron for credential information. PORT=#### needs to match `REACT_APP_BASE_URL`'s port on the frontend repo. Default is 5000.
+
 ##### Run app
 ```
 nodemon app.js
