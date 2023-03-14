@@ -71,9 +71,12 @@ function validateIsBoolean(v) {
     return (typeof v === 'boolean');
 }
 
-// TODO
-function validateDateTime(datetime) {
-    return;
+// Validates input is a valid ISO Date
+function validateISODateTime(datetime) {
+    if (typeof v !== 'string') return false;
+    if (!(datetime.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/))) return false;
+    const test = new Date(datetime);
+    return test instanceof Date && !isNaN(test) && d.toISOString() === test;
 }
 
 module.exports = { 
@@ -85,5 +88,5 @@ module.exports = {
     validateNullableStringHashID,
     validateIsBoolean,
     validateName,
-    validateDateTime,
+    validateISODateTime,
 };
