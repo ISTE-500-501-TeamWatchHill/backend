@@ -57,8 +57,6 @@ router.post('/', async (req, res) => {
             res.status(500).json({'error': 'User is in a team'});
         }
         else {
-            console.log('goodUsers', goodUsers)
-
             goodUsers.forEach((user) => {
                 console.log(user);
             });
