@@ -5,7 +5,7 @@ require('dotenv').config(); //initialize dotenv
 const ObjectId = require("bson-objectid");
 
 // Get all game information by id
-router.get('/byID', async (req, res) => {
+router.post('/byID', async (req, res) => {
     // Error Checking
     if (req.body && req.body.id) {
         const game = await GameInfo.findOne({"_id": ObjectId(req.body.id)});

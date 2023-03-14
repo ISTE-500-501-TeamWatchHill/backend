@@ -102,7 +102,7 @@ run npm install -g jest
 ```
 #### getGameByID
 * Endpoint: {{host}}/games/byID
-* Method Type: GET
+* Method Type: POST
 * Request Body:
 ```
 {
@@ -205,6 +205,7 @@ run npm install -g jest
 ```
 #### getUniversityByID
 * Endpoint: {{host}}/universities/byID
+* Method Type: POST
 * Request Body:
 ```
 ```
@@ -240,7 +241,7 @@ run npm install -g jest
 ```
 #### getTeamByID
 * Endpoint: {{host}}/teams/byID
-* Method Type: GET
+* Method Type: POST
 * Request Body:
 ```
 {
@@ -297,7 +298,7 @@ run npm install -g jest
 ```
 #### getTeamByUniversityID
 * Endpoint: {{host}}/teams/byUniID
-* Method Type: GET
+* Method Type: POST
 * Request Body:
 ```
 {
@@ -351,7 +352,7 @@ run npm install -g jest
 ```
 #### getUserByID
 * Endpoint: {{host}}/users/byID
-* Method Type: GET
+* Method Type: POST
 * Request Body:
 ```
 {
