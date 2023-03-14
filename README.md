@@ -74,7 +74,7 @@ run npm install -g jest
 
 ### Games (Public):
 #### getAllGames
-* Endpoint: {{host}}/games/all
+* Endpoint: {{host}}/gamePub/all
 * Method Type: GET
 * Request Body:
 ```
@@ -101,7 +101,7 @@ run npm install -g jest
 ]
 ```
 #### getGameByID
-* Endpoint: {{host}}/games/byID
+* Endpoint: {{host}}/gamePub/byID
 * Method Type: POST
 * Request Body:
 ```
@@ -125,7 +125,7 @@ run npm install -g jest
 
 ### Games (Secure):
 #### updateGameInfo
-* Endpoint: {{host}}/games
+* Endpoint: {{host}}/gameSec
 * Method Type: PUT
 * Request Body:
 ```
@@ -156,7 +156,7 @@ run npm install -g jest
 }
 ```
 #### createNewGame
-* Endpoint: {{host}}/games
+* Endpoint: {{host}}/gameSec
 * Method Type: POST
 * Request Body:
 ```
@@ -180,7 +180,7 @@ run npm install -g jest
 }
 ```
 #### deleteGame
-* Endpoint: {{host}}/games
+* Endpoint: {{host}}/gameSec
 * Method Type: DELETE
 * Request Body:
 ```
@@ -197,7 +197,7 @@ run npm install -g jest
 ```
 ### Universities (Public):
 #### getAllUniversities
-* Endpoint: {{host}}/universities/all
+* Endpoint: {{host}}/universityPub/all
 * Method Type: GET
 * Request Body:
 ```
@@ -206,7 +206,7 @@ run npm install -g jest
 ```
 ```
 #### getUniversityByID
-* Endpoint: {{host}}/universities/byID
+* Endpoint: {{host}}/universityPub/byID
 * Method Type: POST
 * Request Body:
 ```
@@ -219,7 +219,7 @@ run npm install -g jest
 
 ### Teams (Public):
 #### getAllTeams
-* Endpoint: {{host}}/teams/all
+* Endpoint: {{host}}/teamPub/all
 * Method Type: GET
 * Request Body:
 ```
@@ -244,7 +244,7 @@ run npm install -g jest
 }
 ```
 #### getTeamByID
-* Endpoint: {{host}}/teams/byID
+* Endpoint: {{host}}/teamPub/byID
 * Method Type: POST
 * Request Body:
 ```
@@ -266,7 +266,7 @@ run npm install -g jest
 }
 ```
 #### getTeamByUniversityID
-* Endpoint: {{host}}/teams/byUniID
+* Endpoint: {{host}}/teamPub/byUniID
 * Method Type: POST
 * Request Body:
 ```
@@ -295,9 +295,9 @@ run npm install -g jest
 }
 ```
 
-### Teams (Public):
+### Teams (Secure):
 #### newTeam
-* Endpoint: {{host}}/teams
+* Endpoint: {{host}}/teamSec
 * Method Type: POST
 * Request Body:
 ```
@@ -321,7 +321,7 @@ run npm install -g jest
 }
 ```
 #### updateTeam
-* Endpoint: {{host}}/teams
+* Endpoint: {{host}}/teamSec
 * Method Type: PUT
 * Request Body:
 ```
@@ -334,7 +334,7 @@ run npm install -g jest
 
 ### Users (Public):
 #### getAllUsers
-* Endpoint: {{host}}/users/all
+* Endpoint: {{host}}/userPub/all
 * Method Type: GET
 * Request Body:
 ```
@@ -357,7 +357,7 @@ run npm install -g jest
 }
 ```
 #### getUserByID
-* Endpoint: {{host}}/users/byID
+* Endpoint: {{host}}/userPub/byID
 * Method Type: POST
 * Request Body:
 ```
@@ -389,7 +389,7 @@ OR
 ### Users (Secure):
 #### updateUserPermission
 [[In Progress]]
-* Endpoint: {{host}}/users/permission
+* Endpoint: {{host}}/userSec/permission
 * Method Type: PUT
 * Request Body:
 ```
@@ -398,7 +398,7 @@ OR
 ```
 ```
 #### updateMarketingPreferences
-* Endpoint: {{host}}/users/updateMarketingPreferences
+* Endpoint: {{host}}/userSec/updateMarketingPreferences
 * Method Type: PUT
 * Request Body:
 ```
