@@ -5,7 +5,7 @@ require('dotenv').config(); //initialize dotenv
 let ObjectId = require("bson-objectid");
 
 // Get all user information by id without password
-router.get('/byID', async (req, res) => {
+router.post('/byID', async (req, res) => {
     // Error Checking
     if (req.body && req.body.id) {
         const user = await UserInfo.findOne({"_id": ObjectId(req.body.id)}, {hashedPassword: 0});

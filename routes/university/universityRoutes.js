@@ -17,7 +17,7 @@ router.get('/all', async (req, res) => {
 });
 
 // Get all university information by id
-router.get('/byID', async (req, res) => {
+router.post('/byID', async (req, res) => {
     // Error Checking
     if (req.body && req.body.id) {
         const uni = await UniversityInfo.findOne({"_id": ObjectId(req.body.id)});

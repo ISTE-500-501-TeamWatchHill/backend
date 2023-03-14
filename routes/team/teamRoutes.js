@@ -16,7 +16,7 @@ router.get('/all', async (req, res) => {
 });
 
 // Get all team information by id
-router.get('/byID', async (req, res) => {
+router.post('/byID', async (req, res) => {
     // Error Checking
     if (req.body && req.body._id) {
         const team = await TeamInfo.findOne({"_id": ObjectId(req.body._id)});
@@ -32,7 +32,7 @@ router.get('/byID', async (req, res) => {
     }
 });
 
-router.get('/byUniID', async (req, res) => {
+router.post('/byUniID', async (req, res) => {
     if (req.body && req.body.universityID) {
         const unis = await TeamInfo.find({universityID: req.body.universityID});
 
