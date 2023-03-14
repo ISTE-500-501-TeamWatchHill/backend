@@ -4,8 +4,8 @@ const { GameInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
 const ObjectId = require('bson-objectid');
 const {
-    validateUniversityID,
-    validateTeamID,
+    validateNonNullNumberID,
+    validateNonNullStringHashID,
 } = require('../auth/validation');
 
 // Get all game information by id
@@ -69,13 +69,13 @@ router.post('/', async (req, res) => {
         const { universityID, homeTeam, awayTeam } = req.body;
 
         // validate all input before adding to db
-        if (!validateUniversityID(universityID)) {
+        if (!validateNonNullNumberID(universityID)) {
             res.status(403).json({ 'error': 'UniversityID Invalid' });
         }
-        if (!validateTeamID(homeTeam)) {
+        if (!validateNonNullStringHashID(homeTeam)) {
             res.status(403).json({ 'error': 'Home Team ID Invalid' });
         }
-        if (!validateTeamID(awayTeam)) {
+        if (!validateNonNullStringHashID(awayTeam)) {
             res.status(403).json({ 'error': 'Away Team ID Invalid' });
         }
 

@@ -7,8 +7,8 @@ const jwt = require('jsonwebtoken');
 const { 
     validateEmail, 
     validatePassword, 
-    validateUniversityID, 
-    validateMarketable, 
+    validateNonNullNumberID, 
+    validateIsBoolean, 
     validateName 
 } = require('./validation');
 
@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
 
         if (uid && uid > 0 && firstName && firstName.length > 0 && lastName && lastName.length > 0 && email && email.length > 0 && canMarket && password && password.length > 0) {
             // validate all input before adding to db
-            if (!validateUniversityID(uid)) {
+            if (!validateNonNullNumberID(uid)) {
                 res.status(403).json({ 'error': 'UniversityID Invalid' });
             }
             if (!validateName(firstName)) {
@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
             if (!validateEmail(email)) {
                 res.status(403).json({ 'error': 'Email Invalid' });
             }
-            if (!validateMarketable(canMarket)) {
+            if (!validateIsBoolean(canMarket)) {
                 res.status(403).json({ 'error': 'Marketability Invalid' });
             }
             if (!validatePassword(password)) {

@@ -27,37 +27,6 @@ function validateEmail(email) {
     return !!(email.match(/^(?:[a-zA-Z\d][a-zA-Z\d_-]{5,10}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})$/));
 }
 
-// Validates universityIDs; ensuring input is a number greater than 0
-function validateUniversityID(universityID) {
-    if (typeof universityID !== 'number') return false;
-    return universityID > 0;
-}
-
-// Validates universityIDs; ensuring input is a number greater than 0
-function validateGameID(gameID) {
-    if (typeof gameID !== 'number') return false;
-    return gameID > 0;
-}
-
-// Validates teamIDs; ensuring input is a string, is not empty, and contains only [a-z0-9] (w/o spaces)
-function validateTeamID(teamID) {
-    if (typeof teamID !== 'string') return false;
-    if (teamID.length < 1) return false;
-    return !!(teamID.match(/^[a-z0-9]+$/));
-}
-
-// Validates teamIDs; ensuring input is a string, is not empty, and contains only [a-z0-9] (w/o spaces)
-function validateUserID(userID) {
-    if (typeof userID !== 'string') return false;
-    if (userID.length < 1) return false;
-    return !!(userID.match(/^[a-z0-9]+$/));
-}
-
-// Validates isMarketable; ensuring it is a boolean
-function validateMarketable(isMarketable) {
-    return (typeof isMarketable === 'boolean');
-}
-
 // Validates university, team and people names; follows the following rules:
 //      1. must be a string
 //      2. must have a length greater than or equal to 1
@@ -69,13 +38,52 @@ function validateName(name) {
     return !!(name.match(/[a-zA-Z0-9,.'\-\s]+/));
 }
 
+// Validates number IDs; ensuring input is a number greater than 0
+function validateNonNullNumberID(v) {
+    if (typeof v !== 'number') return false;
+    return v > 0;
+}
+
+// same as above, but allows for null
+function validateNullableNumberID(v) {
+    if (v === null) return true;
+    if (typeof v !== 'number') return false;
+    return v > 0;
+}
+
+// Validates string hash IDs; ensuring input is a string, is not empty, and contains only [a-z0-9] (w/o spaces)
+function validateNonNullStringHashID(v) {
+    if (typeof v !== 'string') return false;
+    if (v.length < 1) return false;
+    return !!(v.match(/^[a-z0-9]+$/));
+}
+
+// same as above, but allows for null
+function validateNullableStringHashID(v) {
+    if (v === null) return true;
+    if (typeof v !== 'string') return false;
+    if (v.length < 1) return false;
+    return !!(v.match(/^[a-z0-9]+$/));
+}
+
+// Validates argument is a boolean
+function validateIsBoolean(v) {
+    return (typeof v === 'boolean');
+}
+
+// TODO
+function validateDateTime(datetime) {
+    return;
+}
+
 module.exports = { 
-    validateEmail, 
-    validatePassword, 
-    validateUniversityID, 
-    validateTeamID, 
-    validateUserID, 
-    validateMarketable, 
-    validateName, 
-    validateGameID 
+    validateEmail,
+    validatePassword,
+    validateNonNullNumberID,
+    validateNullableNumberID,
+    validateNonNullStringHashID,
+    validateNullableStringHashID,
+    validateIsBoolean,
+    validateName,
+    validateDateTime,
 };
