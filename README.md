@@ -72,9 +72,9 @@ run npm install -g jest
     }
     ```
 
-### Games:
+### Games (Public):
 #### getAllGames
-* Endpoint: {{host}}/games/all
+* Endpoint: {{host}}/gamePub/all
 * Method Type: GET
 * Request Body:
 ```
@@ -101,7 +101,7 @@ run npm install -g jest
 ]
 ```
 #### getGameByID
-* Endpoint: {{host}}/games/byID
+* Endpoint: {{host}}/gamePub/byID
 * Method Type: POST
 * Request Body:
 ```
@@ -122,8 +122,10 @@ run npm install -g jest
     "gameTime": "[Datetime, stamp of last update to the game]"
 }
 ```
+
+### Games (Secure):
 #### updateGameInfo
-* Endpoint: {{host}}/games
+* Endpoint: {{host}}/gameSec
 * Method Type: PUT
 * Request Body:
 ```
@@ -154,7 +156,7 @@ run npm install -g jest
 }
 ```
 #### createNewGame
-* Endpoint: {{host}}/games
+* Endpoint: {{host}}/gameSec
 * Method Type: POST
 * Request Body:
 ```
@@ -178,7 +180,7 @@ run npm install -g jest
 }
 ```
 #### deleteGame
-* Endpoint: {{host}}/games
+* Endpoint: {{host}}/gameSec
 * Method Type: DELETE
 * Request Body:
 ```
@@ -193,9 +195,9 @@ run npm install -g jest
     "deletedCount": [Integer, how many documents were matched and deleted]
 }
 ```
-### Universities:
+### Universities (Public):
 #### getAllUniversities
-* Endpoint: {{host}}/universities/all
+* Endpoint: {{host}}/universityPub/all
 * Method Type: GET
 * Request Body:
 ```
@@ -204,7 +206,7 @@ run npm install -g jest
 ```
 ```
 #### getUniversityByID
-* Endpoint: {{host}}/universities/byID
+* Endpoint: {{host}}/universityPub/byID
 * Method Type: POST
 * Request Body:
 ```
@@ -213,9 +215,11 @@ run npm install -g jest
 ```
 ```
 
-### Teams:
+### Universities (Secure):
+
+### Teams (Public):
 #### getAllTeams
-* Endpoint: {{host}}/teams/all
+* Endpoint: {{host}}/teamPub/all
 * Method Type: GET
 * Request Body:
 ```
@@ -240,7 +244,7 @@ run npm install -g jest
 }
 ```
 #### getTeamByID
-* Endpoint: {{host}}/teams/byID
+* Endpoint: {{host}}/teamPub/byID
 * Method Type: POST
 * Request Body:
 ```
@@ -261,43 +265,8 @@ run npm install -g jest
     "approvalStatus": [Boolean, whether the team has been approved by an admin]
 }
 ```
-#### newTeam
-* Endpoint: {{host}}/teams
-* Method Type: POST
-* Request Body:
-```
-{
-    "universityID": [Integer, university id],
-    "players": [
-        [String, array of user mongo doc IDs for team members]
-    ]
-}
-```
-* Response Body:
-```
-{
-    "_id": [String, team mongo doc ID],
-    "universityID": [Integer, university id],
-    "players": [
-        [String, array of user mongo doc IDs for team members]
-    ],
-    "approvalStatus": [Boolean, whether or not the team has been approved by a moderator],
-    "__v": [Integer, doc version (Ignore)]
-}
-```
-#### updateTeam
-* Endpoint: {{host}}/teams
-* Method Type: PUT
-* Request Body:
-```
-    
-```
-* Response Body:
-```
-
-```
 #### getTeamByUniversityID
-* Endpoint: {{host}}/teams/byUniID
+* Endpoint: {{host}}/teamPub/byUniID
 * Method Type: POST
 * Request Body:
 ```
@@ -326,9 +295,46 @@ run npm install -g jest
 }
 ```
 
-### Users:
+### Teams (Secure):
+#### newTeam
+* Endpoint: {{host}}/teamSec
+* Method Type: POST
+* Request Body:
+```
+{
+    "universityID": [Integer, university id],
+    "players": [
+        [String, array of user mongo doc IDs for team members]
+    ]
+}
+```
+* Response Body:
+```
+{
+    "_id": [String, team mongo doc ID],
+    "universityID": [Integer, university id],
+    "players": [
+        [String, array of user mongo doc IDs for team members]
+    ],
+    "approvalStatus": [Boolean, whether or not the team has been approved by a moderator],
+    "__v": [Integer, doc version (Ignore)]
+}
+```
+#### updateTeam
+* Endpoint: {{host}}/teamSec
+* Method Type: PUT
+* Request Body:
+```
+    
+```
+* Response Body:
+```
+
+```
+
+### Users (Public):
 #### getAllUsers
-* Endpoint: {{host}}/users/all
+* Endpoint: {{host}}/userPub/all
 * Method Type: GET
 * Request Body:
 ```
@@ -351,7 +357,7 @@ run npm install -g jest
 }
 ```
 #### getUserByID
-* Endpoint: {{host}}/users/byID
+* Endpoint: {{host}}/userPub/byID
 * Method Type: POST
 * Request Body:
 ```
@@ -379,9 +385,11 @@ OR
     "email": "[String, users email]"
 }
 ```
+
+### Users (Secure):
 #### updateUserPermission
 [[In Progress]]
-* Endpoint: {{host}}/users/permission
+* Endpoint: {{host}}/userSec/permission
 * Method Type: PUT
 * Request Body:
 ```
@@ -390,7 +398,7 @@ OR
 ```
 ```
 #### updateMarketingPreferences
-* Endpoint: {{host}}/users/updateMarketingPreferences
+* Endpoint: {{host}}/userSec/updateMarketingPreferences
 * Method Type: PUT
 * Request Body:
 ```
