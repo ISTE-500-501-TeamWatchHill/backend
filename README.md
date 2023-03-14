@@ -218,18 +218,82 @@ run npm install -g jest
 * Method Type: GET
 * Request Body:
 ```
+{
+    
+}
 ```
 * Response Body:
 ```
+{
+    "players": [
+        [String, array of players mongo doc IDs]
+    ],
+    "_id": [String, teams mongo doc ID],
+    "universityID": [Integer, university id],
+    "description": [String, team name],
+    "logo": [In Progress],
+    "approvalStatus": [Boolean, whether the team has been approved by an admin]
+},
+{
+    Same as above, repeat for as many records as are available
+}
 ```
 #### getTeamByID
 * Endpoint: {{host}}/teams/byID
 * Method Type: GET
 * Request Body:
 ```
+{
+    "_id": [String, teams mongo doc ID]
+}
 ```
 * Response Body:
 ```
+{
+    "players": [
+        [String, array of players mongo doc IDs]
+    ],
+    "_id": [String, teams mongo doc ID],
+    "universityID": [Integer, university id],
+    "description": [String, team name],
+    "logo": [In Progress],
+    "approvalStatus": [Boolean, whether the team has been approved by an admin]
+}
+```
+#### newTeam
+* Endpoint: {{host}}/teams
+* Method Type: POST
+* Request Body:
+```
+{
+    "universityID": [Integer, university id],
+    "players": [
+        [String, array of user mongo doc IDs for team members]
+    ]
+}
+```
+* Response Body:
+```
+{
+    "_id": [String, team mongo doc ID],
+    "universityID": [Integer, university id],
+    "players": [
+        [String, array of user mongo doc IDs for team members]
+    ],
+    "approvalStatus": [Boolean, whether or not the team has been approved by a moderator],
+    "__v": [Integer, doc version (Ignore)]
+}
+```
+#### updateTeam
+* Endpoint: {{host}}/teams
+* Method Type: PUT
+* Request Body:
+```
+    
+```
+* Response Body:
+```
+
 ```
 
 ### Users:
