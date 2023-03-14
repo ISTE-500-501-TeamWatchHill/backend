@@ -28,6 +28,22 @@ router.get('/byID', async (req, res) => {
         }
     }
     else {
+        res.status(400).json({'error': 'Request must contain team ID'});
+    }
+});
+
+router.get('/byUniID', async (req, res) => {
+    if (req.body && req.body.universityID) {
+        const unis = await TeamInfo.find({universityID: req.body.universityID});
+
+        if (unis === null) {
+            res.status(400).json({'error': 'No Data Found'});
+        }
+        else {
+            res.status(200).json(unis);
+        }
+    }
+    else {
         res.status(400).json({'error': 'Request must contain university ID'});
     }
 });
