@@ -47,12 +47,7 @@ const teamInfoSchema = new mongoose.Schema({
         required: true,
         type: Number
     },
-    players: {
-        userID: {
-            required: true,
-            type: String
-        }
-    },
+    players: [ String ],
     description: {
         required: false,
         type: String

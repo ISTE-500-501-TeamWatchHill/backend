@@ -63,6 +63,7 @@ router.post('/', async (req, res) => {
                     roleID: 19202,
                     universityID,
                     email: email.toLowerCase(), // Sanitization
+                    teamID: null,
                     canMarket,
                     hashedPassword
                 });

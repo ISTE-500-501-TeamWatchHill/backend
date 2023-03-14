@@ -37,26 +37,49 @@ app.use(
   }),
 );
 
-// Route Imports
+// https://www.npmjs.com/package/express-mongo-sanitize?activeTab=readme
+app.use(
+  mongoSanitize({
+    allowDots: true, // typically forbidden, but we want to allow for emails
+    replaceWith: '_', // replaces forbidden $ with _
+  }),
+);
+
+// Universal Route Imports
 const defaultRoute = require('./routes/default.js');
 const auth = require('./routes/auth/auth.js');
 const loginRoutes = require('./routes/auth/login.js');
 const registerRoutes = require('./routes/auth/register.js');
-const userRoutes = require('./routes/user/userRoutes.js');
-const universityRoutes = require('./routes/university/universityRoutes.js');
-const teamRoutes = require('./routes/team/teamRoutes.js');
-const permissionRoutes = require('./routes/permissions/permissionRoutes.js');
-const gameRoutes = require('./routes/game/gameRoutes.js');
 
-// Route Definitions
+// Secure Route Imports
+const userSecure = require('./routes/user/userSecure.js');
+const universitySecure = require('./routes/university/universitySecure.js');
+const teamSecure = require('./routes/team/teamSecure.js');
+const gameSecure = require('./routes/game/gameSecure.js');
+
+// Public Route Imports
+const userPublic = require('./routes/user/userPublic.js');
+const universityPublic = require('./routes/university/universityPublic.js');
+const teamPublic = require('./routes/team/teamPublic.js');
+const gamePublic = require('./routes/game/gamePublic.js');
+
+
+// Universal Route Definitions
 app.use('/', defaultRoute);
 app.use('/login', loginRoutes);
 app.use('/register', registerRoutes);
-app.use('/users', auth, userRoutes);
-app.use('/universities', auth, universityRoutes);
-app.use('/teams', auth, teamRoutes);
-app.use('/permissions', permissionRoutes);
-app.use('/games', auth, gameRoutes);
+
+// Secure Route Definitions
+app.use('/userSec', auth, userSecure);
+app.use('/universitySec', auth, universitySecure);
+app.use('/teamSec', auth, teamSecure);
+app.use('/gameSec', auth, gameSecure);
+
+// Public Route Definitions
+app.use('/userPub', userPublic);
+app.use('/universityPub', universityPublic);
+app.use('/teamPub', teamPublic);
+app.use('/gamePub', gamePublic);
 
 app.listen(port, () => {
   console.log(`App listening on port ${port} 🙃`);

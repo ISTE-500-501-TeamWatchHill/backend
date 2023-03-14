@@ -8,34 +8,6 @@ const {
     validateNonNullStringHashID,
 } = require('../auth/validation');
 
-// Get all game information by id
-router.get('/byID', async (req, res) => {
-    // Error Checking
-    if (req.body && req.body.id) {
-        const game = await GameInfo.findOne({"_id": ObjectId(req.body.id)});
-        if (game === null) {
-            res.status(400).json({'error': 'No Data Found'});
-        }
-        else {
-            res.status(200).json(game);
-        }
-    }
-    else {
-        res.status(400).json({'error': 'Request must contain university ID'});
-    }
-});
-
-// Get all game information
-router.get('/all', async (req, res) => {
-    const game = await GameInfo.find({});
-    if (game === null) {
-        res.status(400).json({'error': 'No Data Found'});
-    }
-    else {
-        res.status(200).json(game);
-    }
-});
-
 // Update game information
 router.put('/', async (req, res) => {
 
@@ -102,6 +74,7 @@ router.post('/', async (req, res) => {
     }
 });
 
+// Delete game by ID
 router.delete('/', async (req, res) => {
     if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
         try {
