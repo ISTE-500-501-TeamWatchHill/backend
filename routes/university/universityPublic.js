@@ -20,7 +20,7 @@ router.get('/all', async (req, res) => {
 router.post('/byID', async (req, res) => {
     // Error Checking
     if (req.body && req.body.id) {
-        const uni = await UniversityInfo.findOne({"_id": ObjectId(req.body.id)});
+        const uni = await UniversityInfo.findOne({"universityID": req.body.id});
         if (uni === null) {
             res.status(400).json({'error': 'No Data Found'});
         }
