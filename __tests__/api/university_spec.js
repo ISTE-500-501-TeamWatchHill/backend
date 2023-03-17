@@ -5,7 +5,15 @@ const Joi = frisby.Joi;
 it('GET /universities/all - expecting 200',
  function () {
     return frisby.get(`http://localhost:3001/universityPub/all`) 
-    .expect('status', 200);
+    .expect('status', 200)
+    .expect('jsonTypes', '[*]', {
+        "_id": Joi.string().required(),
+        "universityID": Joi.number().required(),
+        "name": Joi.string().required(), 
+        "description": Joi.string().required(),
+        "approvalStatus": Joi.boolean().required(),
+        "domain": Joi.string().required()
+    });
 });
 
 //GET /all 400 
@@ -35,7 +43,7 @@ it('POST /universities/byID - expecting 200',
         "id": 0
     })
     .expect('status', 400)
-    .expect('bodyContains', 'Request must contain university ID');  
+    .expect('bodyContains', 'No Data Found');  
 });
 
 //POST /byID 400 - missing id
