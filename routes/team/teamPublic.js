@@ -3,7 +3,6 @@ const router = express.Router();
 const { TeamInfo, UserInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
 let ObjectId = require("bson-objectid");
-const { validateNonNullStringHashID, validateNonNullNumberID } = require('../auth/validation');
 
 // Get all teams
 router.get('/all', async (req, res) => {
@@ -18,9 +17,7 @@ router.get('/all', async (req, res) => {
 
 // Get all team information by id
 router.post('/byID', async (req, res) => {
-    if (!validateNonNullStringHashID(req.body.id)){
-        res.status(400).json({'error': 'Team ID provided invalid'});
-    }
+    // Error Checking
     if (req.body && req.body._id) {
         const team = await TeamInfo.findOne({"_id": ObjectId(req.body._id)});
         if (team === null) {
@@ -36,9 +33,6 @@ router.post('/byID', async (req, res) => {
 });
 
 router.post('/byUniID', async (req, res) => {
-    if (!validateNonNullNumberID(req.body.id)){
-        res.status(400).json({'error': 'University ID provided invalid'});
-    }
     if (req.body && req.body.universityID) {
         const unis = await TeamInfo.find({universityID: req.body.universityID});
 
