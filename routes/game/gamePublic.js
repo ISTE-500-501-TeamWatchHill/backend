@@ -9,18 +9,18 @@ const { validateNonNullStringHashID } = require('../auth/validation');
 router.post('/byID', async (req, res) => {
     if (req.body && req.body.id) {
         if (!validateNonNullStringHashID(req.body.id)){
-            res.status(400).json({'error': 'Game ID provided invalid'});
+            return res.status(400).json({'error': 'Game ID provided invalid'});
         }
         const game = await GameInfo.findOne({"_id": ObjectId(req.body.id)});
         if (game === null) {
-            res.status(400).json({'error': 'No Data Found'});
+            return res.status(400).json({'error': 'No Data Found'});
         }
         else {
-            res.status(200).json(game);
+            return res.status(200).json(game);
         }
     }
     else {
-        res.status(400).json({'error': 'Request must contain game ID'});
+        return res.status(400).json({'error': 'Request must contain game ID'});
     }
 });
 
@@ -28,10 +28,10 @@ router.post('/byID', async (req, res) => {
 router.get('/all', async (req, res) => {
     const game = await GameInfo.find({});
     if (game === null) {
-        res.status(400).json({'error': 'No Data Found'});
+        return res.status(400).json({'error': 'No Data Found'});
     }
     else {
-        res.status(200).json(game);
+        return res.status(200).json(game);
     }
 });
 

@@ -9,7 +9,7 @@ const { validateNonNullNumberID, validateNonNullStringHashID } = require('../aut
 router.post('/byID', async (req, res) => {
     if (req.body && req.body.id) {
         if (!validateNonNullStringHashID(req.body.id)) {
-            res.status(400).json({'error': 'User ID Provided Invalid'});
+            res.status(400).json({'error': 'User `_id` Provided Invalid'});
         }
         // Does the line below actually work?
         const user = await UserInfo.findOne({"_id": ObjectId(req.body.id)}, {hashedPassword: 0});
@@ -22,7 +22,7 @@ router.post('/byID', async (req, res) => {
     }
     else if (req.body && req.body.uid) {
         if (!validateNonNullNumberID(req.body.uid)) {
-            res.status(400).json({'error': 'University ID Provided Invalid'});
+            res.status(400).json({'error': '`uid` Provided Invalid'});
         }
         const user = await UserInfo.findOne({"uid": req.body.uid}, {hashedPassword: 0});
         if (user === null) {

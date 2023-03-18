@@ -18,10 +18,10 @@ router.get('/all', async (req, res) => {
 
 // Get all university information by id
 router.post('/byID', async (req, res) => {
-    if (!validateNonNullNumberID(universityID)) {
-        res.status(400).json({ 'error': 'University ID Provided Invalid' });
-    }
     if (req.body && req.body.universityID) {
+        if (!validateNonNullNumberID(req.body.universityID)) {
+            res.status(400).json({ 'error': 'University ID Provided Invalid' });
+        }
         const uni = await UniversityInfo.findOne({"universityID": req.body.universityID});
         if (uni === null) {
             res.status(400).json({'error': 'No Data Found'});
