@@ -8,9 +8,9 @@
 //          3a. allowed -> ~$`!@#%^&*()_-+={[}]|\:;"'<,>.?/
 //          3b. not allowed -> any whitespace
 function validatePassword(password) {
-    if (typeof password !== 'string') return false;
+    if (typeof password !== 'string') { return false; }
     if (password.length >= 8 && password.match(/^[a-zA-Z0-9~$`!@#%^&*()_\-+={[\]}\|\\:;"'<,>.?/]*$/)) {
-        return !!(password.match(/[a-z]/) && password.match(/[A-Z]/) && password.match(/\d/) && password.match(/[~$`!@#%^&*()_\-+={[\]}\|\\:;"'<,>.?/]/));
+        return !!(password.match(/[a-z]/) && password.match(/[A-Z]/) && password.match(/[0-9]/) && password.match(/[~$`!@#%^&*()_\-+={[\]}\|\\:;"'<,>.?/]/));
     } else {
         return false;
     }
@@ -23,7 +23,7 @@ function validatePassword(password) {
 //      4. followed by a period (.)
 //      5. followed by 2 or more characters [a-zA-Z]
 function validateEmail(email) {
-    if (typeof email !== 'string') return false;
+    if (typeof email !== 'string') { return false; }
     return !!(email.match(/^(?:[a-zA-Z\d][a-zA-Z\d_-]{5,10}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})$/));
 }
 
@@ -34,35 +34,35 @@ function validateEmail(email) {
 //      4. name must only contain [a-zA-Z0-9,.'\-\s] (one or more times)
 function validateName(name) {
     if (typeof name !== 'string') { return false; }
-    if (name.length < 1 || name.match(/^\s|^\w+\s$|\s$/)) return false;
-    return !!(name.match(/[a-zA-Z0-9,.'\-\s]+/));
+    if (name.length < 1 || name.match(/^\s|^\w+\s$|\s$/)) { return false; }
+    return !!(name.match(/^[a-zA-Z0-9,.'\-\s]*$/));
 }
 
 // Validates number IDs; ensuring input is a number greater than 0
 function validateNonNullNumberID(v) {
-    if (typeof v !== 'number') return false;
+    if (typeof v !== 'number') { return false; }
     return v > 0;
 }
 
 // same as above, but allows for null
 function validateNullableNumberID(v) {
-    if (v === null) return true;
-    if (typeof v !== 'number') return false;
+    if (v === null) { return true; }
+    if (typeof v !== 'number'){ return false; }
     return v > 0;
 }
 
 // Validates string hash IDs; ensuring input is a string, is not empty, and contains only [a-z0-9] (w/o spaces)
 function validateNonNullStringHashID(v) {
-    if (typeof v !== 'string') return false;
-    if (v.length < 1) return false;
+    if (typeof v !== 'string') { return false; }
+    if (v.length < 1) { return false; }
     return !!(v.match(/^[a-z0-9]+$/));
 }
 
 // same as above, but allows for null
 function validateNullableStringHashID(v) {
-    if (v === null) return true;
-    if (typeof v !== 'string') return false;
-    if (v.length < 1) return false;
+    if (v === null) { return true; }
+    if (typeof v !== 'string') { return false; }
+    if (v.length < 1) { return false; }
     return !!(v.match(/^[a-z0-9]+$/));
 }
 
@@ -73,10 +73,10 @@ function validateIsBoolean(v) {
 
 // Validates input is a valid ISO Date
 function validateISODateTime(datetime) {
-    if (typeof v !== 'string') return false;
-    if (!(datetime.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/))) return false;
+    if (typeof datetime !== 'string') { return false; }
+    if (!(datetime.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]{3})?Z$/))) { return false; }
     const test = new Date(datetime);
-    return test instanceof Date && !isNaN(test) && d.toISOString() === test;
+    return !isNaN(test);
 }
 
 module.exports = { 
