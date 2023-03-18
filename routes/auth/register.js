@@ -97,7 +97,7 @@ router.post('/', async (req, res) => {
             res.status(403).json({ 'error': 'All Input Not Found, Please Check Your Request' });
         }
     } catch (err) {
-        console.log(err);
+        // console.log(err);
     }
     // Our register logic ends here
 });

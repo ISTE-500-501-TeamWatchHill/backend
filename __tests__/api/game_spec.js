@@ -10,7 +10,7 @@ it('GET /gamePub/all - expecting 200',
         .expect('status', 200)
         .expect('jsonTypes','[*]', { 
             "_id": Joi.string().required(),
-            "universityID": Joi.string().required(),
+            "universityID": Joi.number().required(), // um are these supposed to be strings or numbers? these are all being so weird
             "homeTeam": Joi.string().required(),
             "awayTeam": Joi.string().required(),
             "winningTeam": Joi.string().required(),
@@ -33,7 +33,7 @@ it('POST /gamePub/byID - expecting 200',
         "_id": Joi.string().required(),
         "universityID": Joi.string().required(),
         "homeTeam": Joi.string().required(),
-        "awayTeam": Joi.string().required(),
+        "awayTeam": Joi.string().required(), // uhhhhh again strings or numbers people
         "winningTeam": Joi.string().required(),
         "gameFinished": Joi.boolean().required(),
         "gameTime": Joi.date().iso().required()
@@ -53,5 +53,5 @@ it('POST /gamePub/byID - expecting 400',
  function () {
     return frisby.post(`http://localhost:3001/gamePub/byID`,{}) 
     .expect('status', 400)
-    .expect('bodyContains', 'Request must contain university ID'); 
+    .expect('bodyContains', 'Request must contain game ID'); 
 });

@@ -47,7 +47,7 @@ router.post('/', async (req, res) => {
 
         }
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         res.status(500).send('Server Error Occurred');
     }
     // Our register logic ends here

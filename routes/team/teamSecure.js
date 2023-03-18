@@ -36,9 +36,9 @@ router.post('/', async (req, res) => {
             res.status(500).json({'error': 'User is in a team'});
         }
         else {
-            goodUsers.forEach((user) => {
-                console.log(user);
-            });
+            // goodUsers.forEach((user) => {
+                // console.log(user);
+            // });
 
             const data = new TeamInfo({
                 universityID,
