@@ -2,16 +2,23 @@ const express = require('express');
 const router = express.Router();
 const { GameInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
-const ObjectId = require("bson-objectid");
+const ObjectId = require('bson-objectid');
+const {
+    validateNonNullNumberID,
+    validateNonNullStringHashID,
+} = require('../auth/validation');
 
 // Update game information
 router.put('/', async (req, res) => {
 
     if (req.body && req.body._id) {
+        if(!validateNonNullStringHashID(req.body._id)) {
+            res.status(400).json({'error': 'Game ID provided invalid'});
+        }
         const updGame = await GameInfo.findOne({_id: ObjectId(req.body._id)});
 
         if (updGame) {
-            const {updatedData} = req.body;
+            const { updatedData } = req.body; // TODO: Validation for this is a mess
             GameInfo.updateOne({_id: updGame._id}, updatedData, function (err, result) {
                 if (err !== null) {
                     res.status(500).json(err);
@@ -34,7 +41,18 @@ router.put('/', async (req, res) => {
 // Create new game
 router.post('/', async (req, res) => {
     if (req.body && req.body.universityID && req.body.homeTeam && req.body.awayTeam) {
-        const {universityID, homeTeam, awayTeam} = req.body;
+        const { universityID, homeTeam, awayTeam } = req.body;
+
+        // validate all input before adding to db
+        if (!validateNonNullNumberID(universityID)) {
+            res.status(400).json({ 'error': 'University ID Invalid' });
+        }
+        if (!validateNonNullStringHashID(homeTeam)) {
+            res.status(400).json({ 'error': 'Home Team ID Invalid' });
+        }
+        if (!validateNonNullStringHashID(awayTeam)) {
+            res.status(400).json({ 'error': 'Away Team ID Invalid' });
+        }
 
         const data = new GameInfo({
             universityID,
@@ -67,7 +85,7 @@ router.delete('/', async (req, res) => {
             res.status(200).json(deleted);
         }
         catch (error) {
-            console.log(error);
+            // console.log(error);
             res.status(500).json({"error": error});
         }
     }

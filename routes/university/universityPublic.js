@@ -3,10 +3,10 @@ const router = express.Router();
 const { UniversityInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
 let ObjectId = require("bson-objectid");
+const { validateNonNullNumberID } = require('../auth/validation');
 
 // Get all university information
 router.get('/all', async (req, res) => {
-    // Error Checking
     const unis = await UniversityInfo.find({});
     if (unis === null) {
         res.status(400).json({'error': 'No Data Found'});
@@ -18,9 +18,11 @@ router.get('/all', async (req, res) => {
 
 // Get all university information by id
 router.post('/byID', async (req, res) => {
-    // Error Checking
-    if (req.body && req.body.id) {
-        const uni = await UniversityInfo.findOne({"universityID": req.body.id});
+    if (req.body && req.body.universityID) {
+        if (!validateNonNullNumberID(req.body.universityID)) {
+            res.status(400).json({ 'error': 'University ID Provided Invalid' });
+        }
+        const uni = await UniversityInfo.findOne({"universityID": req.body.universityID});
         if (uni === null) {
             res.status(400).json({'error': 'No Data Found'});
         }

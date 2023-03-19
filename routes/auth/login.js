@@ -11,13 +11,14 @@ router.post('/', async (req, res) => {
     try {
         // Get user input
         let { email, password } = req.body;
-        email = email.toLowerCase();
 
         // Validate user input
         if (!(email && password)) {
-            res.status(400).send("All input is required");
+            return res.status(400).send("All input is required");
         }
+        
         // Validate if user exist in our database
+        email = email.toLowerCase();
         const user = await UserInfo.findOne({ email });
 
         if (user && (await bcrypt.compareSync(password, user.hashedPassword, 10))) {
@@ -46,7 +47,7 @@ router.post('/', async (req, res) => {
 
         }
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         res.status(500).send('Server Error Occurred');
     }
     // Our register logic ends here
