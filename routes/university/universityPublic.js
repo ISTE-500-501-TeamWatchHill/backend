@@ -27,8 +27,24 @@ router.get('/unapproved', async (req, res) => {
     }
 });
 
-// Get all university information by id
+// Get all university information by _id
 router.post('/byID', async (req, res) => {
+    if (req.body && req.body._id) {
+        const uni = await UniversityInfo.findOne({_id: req.body._id});
+        if (uni === null) {
+            res.status(400).json({'error': 'No Data Found'});
+        }
+        else {
+            res.status(200).json(uni);
+        }
+    }
+    else {
+        res.status(400).json({'error': 'Request must contain _id'});
+    }
+});
+
+// Get all university information by University id
+router.post('/byUniversityID', async (req, res) => {
     if (req.body && req.body.universityID) {
         if (!validateNonNullNumberID(req.body.universityID)) {
             res.status(400).json({ 'error': 'University ID Provided Invalid' });
