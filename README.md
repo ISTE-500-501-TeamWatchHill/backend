@@ -206,15 +206,68 @@ run npm install -g jest
 ```
 * Response Body:
 ```
+[
+    {
+        "_id": [String, mongo doc ID],
+        "universityID": [Integer, University ETS Code],
+        "domain": [String, universities email domain],
+        "moderatorIDs": [
+            [Strings, mongo doc IDs of moderator users for this university]
+        ],
+        "name": [String, university name],
+        "description": [String, university description],
+        "logo": [IN PROGRESS]
+    },
+    {
+        Same as above, repeat for as many records as are available
+    }
+]
 ```
 #### getUniversityByID
 * Endpoint: {{host}}/universityPub/byID
 * Method Type: POST
 * Request Body:
 ```
+{
+    _id: [String, university mongo doc ID]
+}
 ```
 * Response Body:
 ```
+{
+    "_id": [String, mongo doc ID],
+    "universityID": [Integer, University ETS Code],
+    "domain": [String, universities email domain],
+    "moderatorIDs": [
+        [Strings, mongo doc IDs of moderator users for this university]
+    ],
+    "name": [String, university name],
+    "description": [String, university description],
+    "logo": [IN PROGRESS]
+}
+```
+#### getUniversityByUniversityID
+* Endpoint: {{host}}/universityPub/byUniversityID
+* Method Type: POST
+* Request Body:
+```
+{
+    universityID: [Integer, university ETS code]
+}
+```
+* Response Body:
+```
+{
+    "_id": [String, mongo doc ID],
+    "universityID": [Integer, University ETS Code],
+    "domain": [String, universities email domain],
+    "moderatorIDs": [
+        [Strings, mongo doc IDs of moderator users for this university]
+    ],
+    "name": [String, university name],
+    "description": [String, university description],
+    "logo": [IN PROGRESS]
+}
 ```
 
 ### Universities (Secure):
