@@ -218,6 +218,84 @@ run npm install -g jest
 ```
 
 ### Universities (Secure):
+#### newUniversity
+* Endpoint: {{host}}/universitySec
+* Method Type: POST
+* Request Body:
+```
+{
+    "universityID": [Integer, University ETS Code, GOOGLE "UNIVERSITY ETS CODE" FOR THIS VALUE],
+    "domain": [String, universities email domain (i.e. 'abc@rit.edu', domain would be 'rit.edu')],
+    "moderatorIDs": [
+        [Strings, mongo doc IDs of moderator users for this university]
+    ],
+    "name": [String, university name],
+    "description": [String, university description (Optional)],
+    "logo": [IN PROGRESS - OMIT FOR NOW (Optional)]
+}
+```
+* Response Body:
+```
+{
+    "_id": [String, mongo doc ID],
+    "universityID": [Integer, University ETS Code],
+    "domain": [String, universities email domain],
+    "moderatorIDs": [
+        [Strings, mongo doc IDs of moderator users for this university]
+    ],
+    "name": [String, university name],
+    "description": [String, university description],
+    "logo": [IN PROGRESS]
+}
+```
+#### updateUniversity
+* Endpoint: {{host}}/universitySec
+* Method Type: PUT
+* Request Body:
+```
+{
+    "_id": [String, mongo doc ID of university to be updated],
+    updatedData: {
+        <!-- Only include data here that should be updated! Options Include: -->
+        "description": [String, Updated university description],
+        "name": [String, Updated university name],
+        "domain": [String, updated university domain],
+        "universityID": [Integer, updated university ETS code],
+        "logo": [IN PROGRESS]
+    }
+}
+```
+* Response Body:
+```
+{
+    "_id": [String, mongo doc ID],
+    "universityID": [Integer, University ETS Code],
+    "domain": [String, universities email domain],
+    "moderatorIDs": [
+        [Strings, mongo doc IDs of moderator users for this university]
+    ],
+    "name": [String, university name],
+    "description": [String, university description],
+    "logo": [IN PROGRESS],
+    "approvalStatus": [Boolean, whether or not the university has been approved by a moderator]
+}
+```
+#### deleteUniversity
+* Endpoint: {{host}}/universitySec
+* Method Type: DELETE
+* Request Body:
+```
+{
+    "_id": [String, mongo doc ID]
+}
+```
+* Response Body:
+```
+{
+    "acknowledged": [Boolean, whether or not the delete was successful],
+    "deletedCount": [Integer, how many records were deleted]
+}
+```
 
 ### Teams (Public):
 #### getAllTeams
