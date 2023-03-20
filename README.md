@@ -40,6 +40,7 @@ run npm install -g jest
 #### Register:
 * Endpoint: {{host}}/register
 * Method Type: POST
+* Authorization: None
 * Request Body:
     ```
     {
@@ -60,6 +61,7 @@ run npm install -g jest
 #### Login: 
 * Endpoint: {{host}}/login
 * Method Type: POST
+* Authorization: None
 * Request Body:
     ```
     {
@@ -78,6 +80,7 @@ run npm install -g jest
 #### getAllGames
 * Endpoint: {{host}}/gamePub/all
 * Method Type: GET
+* Authorization: None
 * Request Body:
 ```
 {
@@ -105,6 +108,7 @@ run npm install -g jest
 #### getGameByID
 * Endpoint: {{host}}/gamePub/byID
 * Method Type: POST
+* Authorization: None
 * Request Body:
 ```
 {
@@ -129,6 +133,7 @@ run npm install -g jest
 #### updateGameInfo
 * Endpoint: {{host}}/gameSec
 * Method Type: PUT
+* Authorization: Header Token
 * Request Body:
 ```
 {
@@ -160,6 +165,7 @@ run npm install -g jest
 #### createNewGame
 * Endpoint: {{host}}/gameSec
 * Method Type: POST
+* Authorization: Header Token
 * Request Body:
 ```
 {
@@ -184,6 +190,7 @@ run npm install -g jest
 #### deleteGame
 * Endpoint: {{host}}/gameSec
 * Method Type: DELETE
+* Authorization: Header Token, University or Company Admin
 * Request Body:
 ```
 {
@@ -201,6 +208,7 @@ run npm install -g jest
 #### getAllUniversities
 * Endpoint: {{host}}/universityPub/all
 * Method Type: GET
+* Authorization: None
 * Request Body:
 ```
 ```
@@ -226,6 +234,7 @@ run npm install -g jest
 #### getUniversityByID
 * Endpoint: {{host}}/universityPub/byID
 * Method Type: POST
+* Authorization: None
 * Request Body:
 ```
 {
@@ -249,6 +258,7 @@ run npm install -g jest
 #### getUniversityByUniversityID
 * Endpoint: {{host}}/universityPub/byUniversityID
 * Method Type: POST
+* Authorization: None
 * Request Body:
 ```
 {
@@ -274,6 +284,7 @@ run npm install -g jest
 #### newUniversity
 * Endpoint: {{host}}/universitySec
 * Method Type: POST
+* Authorization: Header Token, Company Admin
 * Request Body:
 ```
 {
@@ -304,6 +315,7 @@ run npm install -g jest
 #### updateUniversity
 * Endpoint: {{host}}/universitySec
 * Method Type: PUT
+* Authorization: Header Token, Company Admin
 * Request Body:
 ```
 {
@@ -336,6 +348,7 @@ run npm install -g jest
 #### deleteUniversity
 * Endpoint: {{host}}/universitySec
 * Method Type: DELETE
+* Authorization: Header Token, Company Admin
 * Request Body:
 ```
 {
@@ -354,6 +367,7 @@ run npm install -g jest
 #### getAllTeams
 * Endpoint: {{host}}/teamPub/all
 * Method Type: GET
+* Authorization: None
 * Request Body:
 ```
 {
@@ -379,6 +393,7 @@ run npm install -g jest
 #### getTeamByID
 * Endpoint: {{host}}/teamPub/byID
 * Method Type: POST
+* Authorization: None
 * Request Body:
 ```
 {
@@ -401,6 +416,7 @@ run npm install -g jest
 #### getTeamByUniversityID
 * Endpoint: {{host}}/teamPub/byUniID
 * Method Type: POST
+* Authorization: None
 * Request Body:
 ```
 {
@@ -432,6 +448,7 @@ run npm install -g jest
 #### newTeam
 * Endpoint: {{host}}/teamSec
 * Method Type: POST
+* Authorization: Header Token, University or Company Admin
 * Request Body:
 ```
 {
@@ -456,6 +473,7 @@ run npm install -g jest
 #### updateTeam
 * Endpoint: {{host}}/teamSec
 * Method Type: PUT
+* Authorization: Header Token, University or Company Admin
 * Request Body:
 ```
     
@@ -469,6 +487,7 @@ run npm install -g jest
 #### getAllUsers
 * Endpoint: {{host}}/userPub/all
 * Method Type: GET
+* Authorization: None
 * Request Body:
 ```
 ```
@@ -492,6 +511,7 @@ run npm install -g jest
 #### getUserByID
 * Endpoint: {{host}}/userPub/byID
 * Method Type: POST
+* Authorization: None
 * Request Body:
 ```
 {
@@ -524,6 +544,7 @@ OR
 [[In Progress]]
 * Endpoint: {{host}}/userSec/permission
 * Method Type: PUT
+* Authorization: Header Token, University or Company Admin
 * Request Body:
 ```
 ```
@@ -533,6 +554,7 @@ OR
 #### updateMarketingPreferences
 * Endpoint: {{host}}/userSec/updateMarketingPreferences
 * Method Type: PUT
+* Authorization: Header Token
 * Request Body:
 ```
 IF Requesting User is an ADMIN:
