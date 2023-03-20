@@ -13,7 +13,7 @@ router.post('/', async (req, res) => {
     if (req.body && req.body.universityID && req.body.players && req.body.players.length > 0) {
         const { universityID, players } = req.body;
         if (!validateNonNullNumberID(universityID)) {
-            res.status(400).json({'error': 'Invalid Unversity ID Provided'});
+            res.status(400).json({'error': 'Invalid University ID Provided'});
         }
         let goodUsers = [];
         let badUser = false;
