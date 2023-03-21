@@ -8,7 +8,6 @@ const {
     validateEmail, 
     validatePassword, 
     validateNonNullNumberID, 
-    validateIsBoolean, 
     validateName 
 } = require('./validation');
 
@@ -17,25 +16,22 @@ router.post('/', async (req, res) => {
     try {
         const { uid, firstName, lastName, email, canMarket, password } = req.body;
 
-        if (uid && uid > 0 && firstName && firstName.length > 0 && lastName && lastName.length > 0 && email && email.length > 0 && canMarket && password && password.length > 0) {
+        if (uid && firstName && lastName && email && password) {
             // validate all input before adding to db
             if (!validateNonNullNumberID(uid)) {
-                res.status(400).json({ 'error': 'UniversityID Invalid' });
+                return res.status(403).json({ 'error': 'UniversityID Invalid' });
             }
             if (!validateName(firstName)) {
-                res.status(400).json({ 'error': 'First Name Invalid' });
+                return res.status(403).json({ 'error': 'First Name Invalid' });
             }
             if (!validateName(lastName)) {
-                res.status(400).json({ 'error': 'Last Name Invalid' });
+                return res.status(403).json({ 'error': 'Last Name Invalid' });
             }
             if (!validateEmail(email)) {
-                res.status(400).json({ 'error': 'Email Invalid' });
-            }
-            if (!validateIsBoolean(canMarket)) {
-                res.status(400).json({ 'error': 'Marketability Invalid' });
+                return res.status(403).json({ 'error': 'Email Invalid' });
             }
             if (!validatePassword(password)) {
-                res.status(400).json({ 'error': 'Password Invalid' });
+                return res.status(403).json({ 'error': 'Password Invalid' });
             }
 
             // email needs to end in an approved domain
@@ -64,7 +60,7 @@ router.post('/', async (req, res) => {
                     universityID,
                     email: email.toLowerCase(), // Sanitization
                     teamID: null,
-                    canMarket,
+                    canMarket: canMarket || false,
                     hashedPassword
                 });
 
@@ -97,7 +93,7 @@ router.post('/', async (req, res) => {
             res.status(403).json({ 'error': 'All Input Not Found, Please Check Your Request' });
         }
     } catch (err) {
-        // console.log(err);
+        console.log(err);
     }
     // Our register logic ends here
 });
