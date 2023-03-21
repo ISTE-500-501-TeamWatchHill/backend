@@ -72,7 +72,12 @@ const universityInfoSchema = new mongoose.Schema({
         required: true,
         type: String
     },
-    moderatorIDs: [ String ],
+    moderatorIDs: {
+        userID: {
+            required: true,
+            type: String
+        }
+    },
     name: {
         required: true, 
         type: String
