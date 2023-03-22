@@ -9,7 +9,7 @@ const { validateNonNullStringHashID } = require('../auth/validation');
 router.post('/byID', async (req, res) => {
     if (req.body && req.body.id) {
         if (!validateNonNullStringHashID(req.body.id)){
-            return res.status(400).json({'error': 'Game ID provided invalid'});
+            return res.status(403).json({'error': 'Game ID provided invalid'});
         }
         const game = await GameInfo.findOne({"_id": ObjectId(req.body.id)});
         if (game === null) {

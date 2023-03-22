@@ -45,13 +45,13 @@ router.post('/', async (req, res) => {
 
         // validate all input before adding to db
         if (!validateNonNullNumberID(universityID)) {
-            res.status(400).json({ 'error': 'University ID Invalid' });
+            res.status(403).json({ 'error': 'University ID Invalid' });
         }
         if (!validateNonNullStringHashID(homeTeam)) {
-            res.status(400).json({ 'error': 'Home Team ID Invalid' });
+            res.status(403).json({ 'error': 'Home Team ID Invalid' });
         }
         if (!validateNonNullStringHashID(awayTeam)) {
-            res.status(400).json({ 'error': 'Away Team ID Invalid' });
+            res.status(403).json({ 'error': 'Away Team ID Invalid' });
         }
 
         const data = new GameInfo({
