@@ -3,7 +3,7 @@ const router = express.Router();
 const { UniversityInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
 let ObjectId = require("bson-objectid");
-const { validateNonNullNumberID } = require('../auth/validation');
+const { validateNonNullNumberID, validateNonNullStringHashID } = require('../auth/validation');
 
 // Get all university information
 router.get('/all', async (req, res) => {
@@ -30,6 +30,9 @@ router.get('/unapproved', async (req, res) => {
 // Get all university information by _id
 router.post('/byID', async (req, res) => {
     if (req.body && req.body._id) {
+        if (!validateNonNullStringHashID(req.body._id)) {
+            return res.status(403).json({ 'error': '`_id` Provided Invalid' });
+        }
         const uni = await UniversityInfo.findOne({_id: req.body._id});
         if (uni === null) {
             res.status(400).json({'error': 'No Data Found'});
@@ -47,7 +50,7 @@ router.post('/byID', async (req, res) => {
 router.post('/byUniversityID', async (req, res) => {
     if (req.body && req.body.universityID) {
         if (!validateNonNullNumberID(req.body.universityID)) {
-            res.status(400).json({ 'error': 'University ID Provided Invalid' });
+            return res.status(403).json({ 'error': 'University ID Provided Invalid' });
         }
         const uni = await UniversityInfo.findOne({"universityID": req.body.universityID});
         if (uni === null) {

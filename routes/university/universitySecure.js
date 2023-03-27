@@ -3,12 +3,23 @@ const router = express.Router();
 const { UniversityInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
 let ObjectId = require("bson-objectid");
+const { validateNonNullNumberID, validateName, validateNonNullStringHashID } = require('../auth/validation');
 
 // Create new university
 router.post('/', async (req, res) => {
     if (req.body && req.body.universityID && req.body.domain && req.body.moderatorIDs && req.body.name) {
         if (req.user.roleID == 14139 || req.user.roleID == 21149) {
             const { universityID, domain, moderatorIDs, name } = req.body;
+            if (!validateNonNullNumberID(universityID)) {
+                return res.status(403).json({ 'error': '`universityID` Provided Invalid' });
+            }
+
+            // TODO: Validate domain and moderatorIDs
+
+            if (!validateName(name)) {
+                return res.status(403).json({ 'error': '`name` Provided Invalid' });
+            }
+            
             // Check to see if university exists
             const existing = await UniversityInfo.findOne({universityID}, {_id: 1});
 
@@ -25,6 +36,7 @@ router.post('/', async (req, res) => {
                 });
 
                 if (req.body.logo) {
+                    // TODO: Validate logo input
                     // How logo??
                 }
                 if (req.body.description) {
@@ -48,6 +60,9 @@ router.post('/', async (req, res) => {
 router.put('/', async (req, res) => {
     if (req.user.roleID == 14139 || req.user.roleID == 21149) {
         if (req.body && req.body._id) {
+            if (!validateNonNullStringHashID(req.body._id)) {
+                return res.status(403).json({ 'error': '`_id` Provided Invalid' });
+            }
             const updUni = await UniversityInfo.findOne({_id: ObjectId(req.body._id)});
     
             if (updUni) {
@@ -79,6 +94,9 @@ router.put('/', async (req, res) => {
 // Delete university by _id
 router.delete('/', async (req, res) => {
     if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
+        if (!validateNonNullStringHashID(req.body._id)) {
+            return res.status(403).json({ 'error': '`_id` Provided Invalid' });
+        }
         try {
             const deleted = await UniversityInfo.deleteOne({_id: req.body._id});
             res.status(200).json(deleted);
