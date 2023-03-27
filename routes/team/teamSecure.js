@@ -2,16 +2,19 @@ const express = require('express');
 const router = express.Router();
 const { TeamInfo, UserInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
-let ObjectId = require("bson-objectid");
-const { validateNonNullStringHashID, validateNonNullNumberID } = require('../auth/validation');
+const { validateNonNullNumberID, validateEmail } = require('../auth/validation');
 
 // Create new team
 router.post('/', async (req, res) => {
-    /*
-    - Max / min amount of team members??
+    /* 
+        Questions:
+            - Max / min amount of team members
+            - Shouldn't we ensure all the users are from the same university?
+            - Shouldn't this be sending out invites rather than auto-adding users?
+            - How do we ensure that the user creating the team doesn't put in a different university's ID?
     */
-    if (req.body && req.body.universityID && req.body.players && req.body.players.length > 0) {
-        const { universityID, players } = req.body;
+    if (req.body && req.body.universityID && req.body.emails && req.body.emails.length > 0) {
+        const { universityID, emails } = req.body;
         if (!validateNonNullNumberID(universityID)) {
             res.status(403).json({'error': 'Invalid University ID Provided'});
         }
@@ -19,30 +22,25 @@ router.post('/', async (req, res) => {
         let badUser = false;
 
 
-        players.forEach(async (player) => {
-            if (!validateNonNullStringHashID(ObjectId(player))) {
-                res.status(403).json({'error': 'Invalid Player Provided: ', player});
+        emails.forEach(async (email) => {
+            if (!validateEmail(email)) {
+                res.status(403).json({'error': 'Invalid Player Email Provided: ', email});
             }
-            const user = await UserInfo.findOne({_id: ObjectId(player)}, {teamID: 1, _id: 1});
+            const user = await UserInfo.findOne({email: email}, {teamID: 1, _id: 1});
             if (user && user._id && user.teamID == null) {
-                goodUsers.push(user);
-            }
-            else {
+                goodUsers.push(user._id);
+            } else {
                 badUser = true;
             }
         });
 
         if (badUser) {
-            res.status(500).json({'error': 'User is in a team'});
-        }
-        else {
-            // goodUsers.forEach((user) => {
-                // console.log(user);
-            // });
+            res.status(500).json({'error': 'A user provided is in a team'});
+        } else {
 
             const data = new TeamInfo({
                 universityID,
-                players,
+                goodUsers,
                 approvalStatus: false,
             });
 
@@ -55,8 +53,7 @@ router.post('/', async (req, res) => {
                 res.status(500).json({'error': error});
             }
         }
-    }
-    else {
+    } else {
         res.status(500).json({'error': "missing inputs"});
     }
 });
