@@ -7,24 +7,12 @@ const { validateNonNullNumberID, validateNonNullStringHashID } = require('../aut
 
 // Get all user information by id without password
 router.post('/byID', async (req, res) => {
-    if (req.body && req.body.id) {
-        if (!validateNonNullStringHashID(req.body.id)) {
+    if (req.body && req.body._id) {
+        if (!validateNonNullStringHashID(req.body._id)) {
             res.status(403).json({'error': 'User `_id` Provided Invalid'});
         }
         // Does the line below actually work?
-        const user = await UserInfo.findOne({"_id": ObjectId(req.body.id)}, {hashedPassword: 0});
-        if (user === null) {
-            res.status(400).json({'error': 'No Data Found'});
-        }
-        else {
-            res.status(200).json(user);
-        }
-    }
-    else if (req.body && req.body.uid) {
-        if (!validateNonNullNumberID(req.body.uid)) {
-            res.status(400).json({'error': '`uid` Provided Invalid'});
-        }
-        const user = await UserInfo.findOne({"uid": req.body.uid}, {hashedPassword: 0});
+        const user = await UserInfo.findOne({_id: ObjectId(req.body._id)}, {hashedPassword: 0});
         if (user === null) {
             res.status(400).json({'error': 'No Data Found'});
         }

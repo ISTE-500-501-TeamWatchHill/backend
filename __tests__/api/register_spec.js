@@ -12,7 +12,6 @@ const { generateRandomString } = require('../../routes/auth/validation');
 // POST / 403 - bad password
 it('POST /register - expecting a 403 bad password', function () {
     return frisby.post(`http://localhost:3001/register`, {
-        uid: 1423518,
         firstName: 'Test',
         lastName: 'Test',
         email: `${generateRandomString()}@rit.edu`,
