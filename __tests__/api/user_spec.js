@@ -8,7 +8,6 @@ it('GET /userPub/all - expecting 200',
     .expect('status', 200)
     .expect('jsonTypes','[*]', {
         "_id": Joi.string().required(),
-        //"uID": Joi.number().required(),
         "roleID": Joi.number().required(),
         "firstName": Joi.string().required(),
         "lastName": Joi.string().required(),
@@ -28,7 +27,6 @@ it('POST /userPub/byID - expecting 200',
     .expect('status', 200)
     .expect('jsonTypes','', {
         "_id": Joi.string().required(),
-        //"uID": Joi.number().required(),
         "roleID": Joi.number().required(),
         "firstName": Joi.string().required(),
         "lastName": Joi.string().required(),
