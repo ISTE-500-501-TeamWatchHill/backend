@@ -6,26 +6,26 @@ const { validateNonNullNumberID, validateEmail } = require('../auth/validation')
 
 // Create new team
 router.post('/', async (req, res) => {
-    /* 
-        Questions:
-            - Max / min amount of team members
-            - Shouldn't we ensure all the users are from the same university?
-            - Shouldn't this be sending out invites rather than auto-adding users?
-            - How do we ensure that the user creating the team doesn't put in a different university's ID?
-    */
-    if (req.body && req.body.universityID && req.body.emails && req.body.emails.length > 0) {
+    
+    // TODO: Sending out invites rather than auto-adding users
+    if (req.body && req.body.universityID && req.body.emails) {
         const { universityID, emails } = req.body;
         if (!validateNonNullNumberID(universityID)) {
-            res.status(403).json({'error': 'Invalid University ID Provided'});
+            return res.status(403).json({'error': 'Invalid University ID Provided'});
         }
+
         let goodUsers = [];
         let badUser = false;
 
-
+        if (emails.length < 1 || emails.length > 5) {
+            return res.status(403).json({'error': 'Invalid number of emails provided; must be between 1 and 5 users.'});
+        }
         emails.forEach(async (email) => {
             if (!validateEmail(email)) {
-                res.status(403).json({'error': 'Invalid Player Email Provided: ', email});
+                return res.status(403).json({'error': 'Invalid Player Email Provided: ', email});
             }
+
+            // TODO: get their university as well, confirm it's all the same university, and the same university passed in
             const user = await UserInfo.findOne({email: email}, {teamID: 1, _id: 1});
             if (user && user._id && user.teamID == null) {
                 goodUsers.push(user._id);
@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
         });
 
         if (badUser) {
-            res.status(500).json({'error': 'A user provided is in a team'});
+            return res.status(500).json({'error': 'A user provided is in a team'});
         } else {
 
             const data = new TeamInfo({
@@ -47,14 +47,14 @@ router.post('/', async (req, res) => {
             try {
                 const dta = await data.save();
                 const dataToSave = await TeamInfo.findOne({_id: dta._id});
-                res.status(200).json(dataToSave);
+                return res.status(200).json(dataToSave);
             }
             catch (error) {
-                res.status(500).json({'error': error});
+                return res.status(500).json({'error': error});
             }
         }
     } else {
-        res.status(500).json({'error': "missing inputs"});
+        return res.status(500).json({'error': "missing inputs"});
     }
 });
 
