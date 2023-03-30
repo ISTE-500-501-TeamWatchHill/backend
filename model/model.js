@@ -93,10 +93,6 @@ const universityInfoSchema = new mongoose.Schema({
 }, {collection: "universityInfo"});
 
 const userInfoSchema = new mongoose.Schema({
-    uid: {
-        required: true,
-        type: Number
-    },
     roleID: {
         required: true,
         type: Number

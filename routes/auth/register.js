@@ -14,13 +14,10 @@ const {
 router.post('/', async (req, res) => {
     // Our register logic starts here
     try {
-        const { uid, firstName, lastName, email, canMarket, password } = req.body;
+        const { firstName, lastName, email, canMarket, password } = req.body;
 
-        if (uid && firstName && lastName && email && password) {
+        if (firstName && lastName && email && password) {
             // validate all input before adding to db
-            if (!validateNonNullNumberID(uid)) {
-                return res.status(403).json({ 'error': 'UniversityID Invalid' });
-            }
             if (!validateName(firstName)) {
                 return res.status(403).json({ 'error': 'First Name Invalid' });
             }
@@ -53,7 +50,6 @@ router.post('/', async (req, res) => {
                 // Fix roleID
                 // Create user in database
                 const user = await UserInfo.create({
-                    uid,
                     firstName,
                     lastName,
                     roleID: 19202,

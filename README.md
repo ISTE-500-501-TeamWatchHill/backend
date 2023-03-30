@@ -44,7 +44,6 @@ run npm install -g jest
 * Request Body:
     ```
     {
-        "uid": 123456789, (Integer, Your University ID Number)
         "firstName": "Your First Name", (String)
         "lastName": "Your Last Name", (String)
         "email": "YourEmail@approved.domain", (String)
@@ -496,7 +495,6 @@ run npm install -g jest
 {
     "canMarket": [Boolean, can or cannot send marketing emails to this person],
     "_id": "[String, users mongo doc ID]",
-    "uid": [Integer, users university ID number],
     "roleID": [Integer, users permission integer (See above)],
     "universityID": [Integer, ID of users university],
     "teamID": [Integer, ID of users affiliated team],
@@ -517,19 +515,12 @@ run npm install -g jest
 {
     "id": "[String, users mongo doc ID]"
 }
-
-OR 
-
-{
-    "uid": [Integer, users university ID]
-}
 ```
 * Response Body:
 ```
 {
     "canMarket": [Boolean, can or cannot send marketing emails to this person],
     "_id": "[String, users mongo doc ID]",
-    "uid": [Integer, users university ID number],
     "roleID": [Integer, users permission integer (See above)],
     "universityID": [Integer, ID of users university],
     "teamID": [Integer, ID of users affiliated team],
@@ -551,6 +542,28 @@ OR
 * Response Body:
 ```
 ```
+#### getUserProfile
+* Endpoint: {{host}}/userSec/permission
+* Method Type: POST
+* Authorization: Header Token
+* Request Body:
+```
+{
+
+}
+```
+* Response Body:
+```
+{
+    "canMarket": [Boolean, whether or not to send marketing emails to this person],
+    "_id": [String, users mongo doc ID],
+    "roleID": [Integer, users role ID],
+    "universityID": [Integer, users university ID],
+    "firstName": [String, user first name],
+    "lastName": [String, user last name],
+    "email": [String, user email]
+}
+```
 #### updateMarketingPreferences
 * Endpoint: {{host}}/userSec/updateMarketingPreferences
 * Method Type: PUT
@@ -559,7 +572,7 @@ OR
 ```
 IF Requesting User is an ADMIN:
 {
-    "uid": [Integer, users university ID],
+    "_id": [String, users mongo doc ID],
     "canMarket": [Boolean, value to update with]
 }
 IF Requesting User is NOT AN ADMIN:

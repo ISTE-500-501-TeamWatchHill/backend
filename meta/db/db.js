@@ -38,7 +38,6 @@ db.universityInfo.insertMany(
 // Create userInfo collection and add data
 db.userInfo.insertMany(
     {
-        "uid": 123456789,
         "roleID": 10010,
         "universityID": 2760,
         "teamID": null,
@@ -48,7 +47,6 @@ db.userInfo.insertMany(
         "hashedPassword": null
     },
     {
-        "uid": 101112131,
         "roleID": 110110,
         "universityID": 2928,
         "teamID": null,
@@ -58,7 +56,6 @@ db.userInfo.insertMany(
         "hashedPassword": null
     },
     {
-        "uid": 415161718,
         "roleID": 101001,
         "universityID": 2429,
         "teamID": null,
