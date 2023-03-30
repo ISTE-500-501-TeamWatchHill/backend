@@ -29,27 +29,32 @@ router.post('/', async (req, res) => {
         const { universityID, emails, name } = req.body;
 
         if (!validateName(name)) {
-            return res.status(403).json({'error': 'Invalid Team Name Provided'});
+            res.status(403).json({'error': 'Invalid Team Name Provided'});
+            res.end();
         }
 
         const teamExistsCheck = await TeamInfo.findOne({ description: name });
         if (teamExistsCheck && teamExistsCheck._id) {
-            return res.status(403).json({'error': 'Team Name Provided Already Exists'});
+            res.status(403).json({'error': 'Team Name Provided Already Exists'});
+            res.end();
         }
 
         if (!validateNonNullNumberID(universityID)) {
-            return res.status(403).json({'error': 'Invalid University ID Provided'});
+            res.status(403).json({'error': 'Invalid University ID Provided'});
+            res.end();
         }
 
         if (emails.length < 1 || emails.length > 5) {
-            return res.status(403).json({'error': 'Invalid number of emails provided; must be between 1 and 5 users.'});
+            res.status(403).json({'error': 'Invalid number of emails provided; must be between 1 and 5 users.'});
+            res.end();
         }
 
         let confirmedUsers = [];
         const validateUsers = async () => {
             for (const email of emails) {
                 if (!validateEmail(email)) {
-                    return res.status(403).json({'error': 'Invalid Player Email Provided: ' + email});
+                    res.status(403).json({'error': 'Invalid Player Email Provided: ' + email});
+                    res.end();
                 }
 
                 const user = await UserInfo.findOne(
@@ -63,7 +68,8 @@ router.post('/', async (req, res) => {
                 if (user && user._id && (user.universityID == universityID) && (user.teamID == null)) {
                     confirmedUsers.push(user._id);
                 } else {
-                    return res.status(403).json({'error': 'Invalid Player Email Provided: ' + email});
+                    res.status(403).json({'error': 'User already on a team: ' + email});
+                    res.end();
                 } 
             };
         }
@@ -86,14 +92,17 @@ router.post('/', async (req, res) => {
                 }
             };
             await addTeamIdToUsers();
-            return res.status(200).json(dataToSave);
+            res.status(200).json(dataToSave);
+            res.end();
         }
         catch (error) {
-            return res.status(500).json({'error': "" + error});
+            res.status(500).json({'error': "" + error});
+            res.end();
         }
         
     } else {
-        return res.status(500).json({'error': "missing inputs"});
+        res.status(500).json({'error': "missing inputs"});
+        res.end();
     }
 });
 
