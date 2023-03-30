@@ -34,10 +34,14 @@ router.get('/allExpanded', async (req, res) => {
                 logo: 1,
                 description: 1,
                 players: 1,
-                homeTeamInfo: {
+                universityInfo: {
+                    approvalStatus: 1,
+                    name: 1,
                     description: 1,
                     logo: 1,
                     universityID: 1,
+                    domain: 1,
+                    moderatorID: 1
                 }
             }
         }
