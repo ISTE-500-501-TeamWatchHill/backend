@@ -48,26 +48,30 @@ router.post('/', async (req, res) => {
         }
 
         let confirmedUsers = [];
-        emails.forEach( async (email) => {
-            if (!validateEmail(email)) {
-                return res.status(403).json({'error': 'Invalid Player Email Provided: ' + email});
-            }
-        
-            const user = await UserInfo.findOne(
-                { email: email }, 
-                { 
-                    teamID: 1, 
-                    _id: 1, 
-                    universityID: 1
-                });
-        
-            if (user && user._id && (user.universityID == universityID) && (user.teamID == null)) {
-                confirmedUsers.push(user._id);
-            } else {
-                return res.status(403).json({'error': 'Invalid Player Email Provided: ' + email});
-            }
+        const validateUsers = async () => {
+            for (const email of emails) {
+                if (!validateEmail(email)) {
+                    return res.status(403).json({'error': 'Invalid Player Email Provided: ' + email});
+                }
+
+                const user = await UserInfo.findOne(
+                    { email: email }, 
+                    { 
+                        teamID: 1, 
+                        _id: 1, 
+                        universityID: 1
+                    });
             
-        });
+                if (user && user._id && (user.universityID == universityID) && (user.teamID == null)) {
+                    confirmedUsers.push(user._id);
+                } else {
+                    return res.status(403).json({'error': 'Invalid Player Email Provided: ' + email});
+                }
+                
+            };
+        }
+
+        await validateUsers()
 
         const data = new TeamInfo({
             universityID,
@@ -75,15 +79,20 @@ router.post('/', async (req, res) => {
             description: name,
             approvalStatus: false,
         });
-        // TODO: for each user in the team, set their teamID to the new team's ID
 
         try {
             const dta = await data.save();
             const dataToSave = await TeamInfo.findOne({_id: dta._id});
+            const addTeamIdToUsers = async () => {
+                for (const email of emails) {
+                    await UserInfo.updateOne({ "email": email }, { $set: { "teamID": dta._id }});
+                }
+            };
+            await addTeamIdToUsers();
             return res.status(200).json(dataToSave);
         }
         catch (error) {
-            return res.status(500).json({'error': error});
+            return res.status(500).json({'error': "" + error});
         }
         
     } else {
