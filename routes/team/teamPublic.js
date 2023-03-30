@@ -16,6 +16,41 @@ router.get('/all', async (req, res) => {
     }
 });
 
+// Get all team information + player and university info
+router.get('/allExpanded', async (req, res) => {
+    const teams = await TeamInfo.aggregate([
+        {
+            $lookup: {
+                from: "universityInfo",
+                localField: "universityID",
+                foreignField: "universityID",
+                as: "universityInfo"
+            }
+        },
+        {
+            $project:
+            {
+                approvalStatus: 1,
+                logo: 1,
+                description: 1,
+                players: 1,
+                homeTeamInfo: {
+                    description: 1,
+                    logo: 1,
+                    universityID: 1,
+                }
+            }
+        }
+    ]);
+
+    if (teams === null) {
+        return res.status(400).json({'error': 'No Data Found'});
+    }
+    else {
+        return res.status(200).json(teams);
+    }
+});
+
 // Get all team information by id
 router.post('/byID', async (req, res) => {
     const { _id } = req.body;
