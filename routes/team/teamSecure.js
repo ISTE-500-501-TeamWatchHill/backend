@@ -2,57 +2,90 @@ const express = require('express');
 const router = express.Router();
 const { TeamInfo, UserInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
-const { validateNonNullNumberID, validateEmail } = require('../auth/validation');
+const { validateNonNullNumberID, validateEmail, validateName } = require('../auth/validation');
+let ObjectId = require("bson-objectid");
+
+/*
+    Writing this shit out because I'm fucking dizzy
+
+    // TODO: Work on invites and moderator approvals
+
+    -[x] take in name, emails, and universityID
+    -[x] validate name
+    -[x] validate if name is already used
+    -[x] validate universityID
+    -[x] validate emails.length > 0 && emails.length < 6
+    -[x] validate emails
+    -[x] validate user exists
+    -[x] validate emails belong to users from same university
+    -[x] validate emails belong to users with no teams
+    -[x] create team w/ false approval status, name, emails, and universityID
+    -[] add new teamID to all users in team
+*/
 
 // Create new team
 router.post('/', async (req, res) => {
-    
+
     // TODO: Sending out invites rather than auto-adding users
-    if (req.body && req.body.universityID && req.body.emails) {
-        const { universityID, emails } = req.body;
+    if (req.body && req.body.universityID && req.body.emails && req.body.name) {
+        const { universityID, emails, name } = req.body;
+
+        if (!validateName(name)) {
+            return res.status(403).json({'error': 'Invalid Team Name Provided'});
+        }
+
+        const teamExistsCheck = await TeamInfo.findOne({ description: name });
+        if (teamExistsCheck && teamExistsCheck._id) {
+            return res.status(403).json({'error': 'Team Name Provided Already Exists'});
+        }
+
         if (!validateNonNullNumberID(universityID)) {
             return res.status(403).json({'error': 'Invalid University ID Provided'});
         }
 
-        let goodUsers = [];
-        let badUser = false;
-
         if (emails.length < 1 || emails.length > 5) {
             return res.status(403).json({'error': 'Invalid number of emails provided; must be between 1 and 5 users.'});
         }
-        emails.forEach(async (email) => {
-            if (!validateEmail(email)) {
-                return res.status(403).json({'error': 'Invalid Player Email Provided: ', email});
-            }
 
-            // TODO: get their university as well, confirm it's all the same university, and the same university passed in
-            const user = await UserInfo.findOne({email: email}, {teamID: 1, _id: 1});
-            if (user && user._id && user.teamID == null) {
-                goodUsers.push(user._id);
-            } else {
-                badUser = true;
+        let confirmedUsers = [];
+        emails.forEach( async (email) => {
+            if (!validateEmail(email)) {
+                return res.status(403).json({'error': 'Invalid Player Email Provided: ' + email});
             }
+        
+            const user = await UserInfo.findOne(
+                { email: email }, 
+                { 
+                    teamID: 1, 
+                    _id: 1, 
+                    universityID: 1
+                });
+        
+            if (user && user._id && (user.universityID == universityID) && (user.teamID == null)) {
+                confirmedUsers.push(user._id);
+            } else {
+                return res.status(403).json({'error': 'Invalid Player Email Provided: ' + email});
+            }
+            
         });
 
-        if (badUser) {
-            return res.status(500).json({'error': 'A user provided is in a team'});
-        } else {
+        const data = new TeamInfo({
+            universityID,
+            players: confirmedUsers,
+            description: name,
+            approvalStatus: false,
+        });
+        // TODO: for each user in the team, set their teamID to the new team's ID
 
-            const data = new TeamInfo({
-                universityID,
-                goodUsers,
-                approvalStatus: false,
-            });
-
-            try {
-                const dta = await data.save();
-                const dataToSave = await TeamInfo.findOne({_id: dta._id});
-                return res.status(200).json(dataToSave);
-            }
-            catch (error) {
-                return res.status(500).json({'error': error});
-            }
+        try {
+            const dta = await data.save();
+            const dataToSave = await TeamInfo.findOne({_id: dta._id});
+            return res.status(200).json(dataToSave);
         }
+        catch (error) {
+            return res.status(500).json({'error': error});
+        }
+        
     } else {
         return res.status(500).json({'error': "missing inputs"});
     }
