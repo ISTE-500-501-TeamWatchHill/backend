@@ -3,7 +3,6 @@ const router = express.Router();
 const { TeamInfo, UserInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
 const { validateNonNullNumberID, validateEmail, validateName } = require('../auth/validation');
-let ObjectId = require("bson-objectid");
 
 /*
     Writing this shit out because I'm fucking dizzy
@@ -20,13 +19,12 @@ let ObjectId = require("bson-objectid");
     -[x] validate emails belong to users from same university
     -[x] validate emails belong to users with no teams
     -[x] create team w/ false approval status, name, emails, and universityID
-    -[] add new teamID to all users in team
+    -[x] add new teamID to all users in team
 */
 
 // Create new team
 router.post('/', async (req, res) => {
 
-    // TODO: Sending out invites rather than auto-adding users
     if (req.body && req.body.universityID && req.body.emails && req.body.name) {
         const { universityID, emails, name } = req.body;
 
@@ -66,12 +64,11 @@ router.post('/', async (req, res) => {
                     confirmedUsers.push(user._id);
                 } else {
                     return res.status(403).json({'error': 'Invalid Player Email Provided: ' + email});
-                }
-                
+                } 
             };
         }
 
-        await validateUsers()
+        await validateUsers();
 
         const data = new TeamInfo({
             universityID,
