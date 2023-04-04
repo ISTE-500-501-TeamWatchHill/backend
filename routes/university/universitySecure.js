@@ -59,11 +59,11 @@ router.post('/', async (req, res) => {
 // Update existing university by _id
 router.put('/', async (req, res) => {
     if (req.user.roleID == 14139 || req.user.roleID == 21149) {
-        if (req.body && req.body._id) {
-            if (!validateNonNullStringHashID(req.body._id)) {
+        if (req.body && req.body.id) {
+            if (!validateNonNullStringHashID(req.body.id)) {
                 return res.status(403).json({ 'error': '`_id` Provided Invalid' });
             }
-            const updUni = await UniversityInfo.findOne({_id: ObjectId(req.body._id)});
+            const updUni = await UniversityInfo.findOne({_id: ObjectId(req.body.id)});
     
             if (updUni) {
                 const { updatedData } = req.body;
@@ -73,7 +73,7 @@ router.put('/', async (req, res) => {
                         res.status(500).json(err);
                     }
                     else {
-                        const updated = await UniversityInfo.findOne({_id: req.body._id});
+                        const updated = await UniversityInfo.findOne({_id: req.body.id});
                         res.status(200).json({updated});
                     }
                 });
@@ -94,11 +94,11 @@ router.put('/', async (req, res) => {
 // Delete university by _id
 router.delete('/', async (req, res) => {
     if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
-        if (!validateNonNullStringHashID(req.body._id)) {
-            return res.status(403).json({ 'error': '`_id` Provided Invalid' });
+        if (!validateNonNullStringHashID(req.body.id)) {
+            return res.status(403).json({ 'error': '`id` Provided Invalid' });
         }
         try {
-            const deleted = await UniversityInfo.deleteOne({_id: req.body._id});
+            const deleted = await UniversityInfo.deleteOne({_id: req.body.id});
             res.status(200).json(deleted);
         }
         catch (error) {

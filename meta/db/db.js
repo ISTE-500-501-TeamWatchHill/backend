@@ -40,7 +40,6 @@ db.userInfo.insertMany(
     {
         "roleID": 10010,
         "universityID": 2760,
-        "teamID": null,
         "firstName": "John",
         "lastName": "Doe",
         "email": "jfd1234@rit.edu",
@@ -49,7 +48,6 @@ db.userInfo.insertMany(
     {
         "roleID": 110110,
         "universityID": 2928,
-        "teamID": null,
         "firstName": "Jane",
         "lastName": "Doe",
         "email": "jrd5678@ur.rochester.edu",
@@ -58,7 +56,6 @@ db.userInfo.insertMany(
     {
         "roleID": 101001,
         "universityID": 2429,
-        "teamID": null,
         "firstName": "Richard",
         "lastName": "Johnson",
         "email": "rdj9101@student.monroecc.edu",
@@ -69,7 +66,6 @@ db.userInfo.insertMany(
 // Create teamInfo collection and add data
 db.teamInfo.insertMany(
     {
-        "teamID": 123421,
         "universityID": 2760,
         "players": [],
         "description": "Sample RIT Team 1",
@@ -77,7 +73,6 @@ db.teamInfo.insertMany(
         "approvalStatus": true,
     },
     {
-        "teamID": 475126575,
         "universityID": 2760,
         "players": [],
         "description": "Sample RIT Team 2",
@@ -85,7 +80,6 @@ db.teamInfo.insertMany(
         "approvalStatus": true,
     },
     {
-        "teamID": 2815512,
         "universityID": 2928,
         "players": [],
         "description": "Sample UoR Team",
@@ -93,7 +87,6 @@ db.teamInfo.insertMany(
         "approvalStatus": false,
     },
     {
-        "teamID": 27422978,
         "universityID": 2429,
         "players": [],
         "description": "Sample MCC Team",

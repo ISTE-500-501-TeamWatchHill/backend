@@ -101,10 +101,6 @@ const userInfoSchema = new mongoose.Schema({
         required: true,
         type: Number
     },
-    teamID: {
-        required: false,
-        type: String
-    },
     firstName: {
         required: true,
         type: String
