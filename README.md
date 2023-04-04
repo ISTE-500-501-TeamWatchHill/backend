@@ -75,6 +75,111 @@ run npm install -g jest
     }
     ```
 
+### Admin (Secure):
+#### getAllUnverifiedTeams
+* Endpoint: {{host}}/admin/teams
+* Method Type: GET
+* Authorization: Header Token, Company Admin
+* Request Body:
+```
+{
+
+}
+```
+* Response Body:
+```
+{
+    [  
+        {
+            "_id": [String, mongo doc ID],
+            "teamID": [Integer, team ID],
+            "universityID": [Integer, university ID that team belongs to],
+            "players": [String array, mongo doc IDs of users in this team],
+            "description": [String, team description],
+            "logo": [In Progress],
+            "approvalStatus": [Boolean, whether or not the team has been approved]
+        },
+        {
+            Repeat for as many records exist
+        }
+    ]
+}
+```
+#### verifyTeamByID
+* Endpoint: {{host}}/admin/teams
+* Method Type: PUT
+* Authorization: Header Token, Company Admin
+* Request Body:
+```
+{
+    _id: [String, mongo doc ID of team to be verified]
+}
+```
+* Response Body:
+```
+{
+    "result": {
+        "acknowledged": [Boolean, whether or not the DB recieved your request],
+        "modifiedCount": [Integer, how many documents were updated],
+        "upsertedId": [String, mongo doc ID of upserted record (if exists)],
+        "upsertedCount": [Integer, how many records were upserted],
+        "matchedCount": [Integer, how many records were matched]
+    }
+}
+```
+#### getAllUnverifiedUniversities
+* Endpoint: {{host}}/admin/universities
+* Method Type: GET
+* Authorization: Header Token, Company Admin
+* Request Body:
+```
+{
+
+}
+```
+* Response Body:
+```
+{
+    [
+        {
+            "_id": [String, team mongo doc ID],
+            "universityID": [Integer, university ETS code],
+            "moderatorIDs": [String Array, mongo doc IDs of users who are moderators for this university],
+            "name": [String, university name],
+            "logo": [In Progress],
+            "description": [String, description of university],
+            "approvalStatus": [Boolean, whether or not the university has moderator approval],
+            "domain": [String, the universities email domain]
+        },
+        {
+            Repeat for as many records exist
+        }
+    ]
+}
+```
+#### verifyUniversityByID
+* Endpoint: {{host}}/admin/universities
+* Method Type: PUT
+* Authorization: Header Token, Company Admin
+* Request Body:
+```
+{
+    _id: [String, mongo doc ID of university to be verified]
+}
+```
+* Response Body:
+```
+{
+    "result": {
+        "acknowledged": [Boolean, whether or not the DB recieved your request],
+        "modifiedCount": [Integer, how many documents were updated],
+        "upsertedId": [String, mongo doc ID of upserted record (if exists)],
+        "upsertedCount": [Integer, how many records were upserted],
+        "matchedCount": [Integer, how many records were matched]
+    }
+}
+```
+
 ### Games (Public):
 #### getAllGames
 * Endpoint: {{host}}/gamePub/all
@@ -466,7 +571,6 @@ run npm install -g jest
         [String, array of user mongo doc IDs for team members]
     ],
     "approvalStatus": [Boolean, whether or not the team has been approved by a moderator],
-    "__v": [Integer, doc version (Ignore)]
 }
 ```
 #### updateTeam
@@ -475,11 +579,47 @@ run npm install -g jest
 * Authorization: Header Token, University or Company Admin
 * Request Body:
 ```
-    
+{
+    "_id": [String, mongo doc ID of team to be updated],
+    updatedData: {
+        <!-- Only include data here that should be updated! Options Include: -->
+        "players": [String Array, mongo doc IDs of team members],
+        "teamID": [Integer, ID of team (deprecated)],
+        "universityID": [Integer, university ID that team belongs to],
+        "description": [String, team description],
+        "logo": [In Progress],
+        "approvalStatus": [Boolean, whether or not the team has been approved]
+    }
+}
 ```
 * Response Body:
 ```
-
+{
+    "result": {
+        "acknowledged": [Boolean, whether or not the update passed],
+        "modifiedCount": [Integer, Number of Documents Modified],
+        "upsertedId": [String, ID of new record if upserted],
+        "upsertedCount": [Integer, Number of records upserted],
+        "matchedCount": [Integer, How many records matched the original query]
+    }
+}
+```
+#### deleteTeam
+* Endpoint: {{host}}/teamSec
+* Method Type: DELETE
+* Authorization: Header Token, Company Admin, University Admin
+* Request Body:
+```
+{
+    "_id": [String, teams mongo doc ID]
+}
+```
+* Response Body:
+```
+{
+    "acknowledged": [Boolean, whether or not the DB received your request],
+    "deletedCount": [Integer, how many records were deleted]
+}
 ```
 
 ### Users (Public):

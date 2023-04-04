@@ -44,6 +44,7 @@ const loginRoutes = require('./routes/auth/login.js');
 const registerRoutes = require('./routes/auth/register.js');
 
 // Secure Route Imports
+const adminSecure = require('./routes/admin/adminSecure.js');
 const userSecure = require('./routes/user/userSecure.js');
 const universitySecure = require('./routes/university/universitySecure.js');
 const teamSecure = require('./routes/team/teamSecure.js');
@@ -62,6 +63,7 @@ app.use('/login', loginRoutes);
 app.use('/register', registerRoutes);
 
 // Secure Route Definitions
+app.use('/admin', auth, adminSecure);
 app.use('/userSec', auth, userSecure);
 app.use('/universitySec', auth, universitySecure);
 app.use('/teamSec', auth, teamSecure);
