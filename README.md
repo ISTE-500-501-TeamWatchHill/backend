@@ -241,7 +241,7 @@ run npm install -g jest
 * Request Body:
 ```
 {
-    _id: [String, games mongo doc ID],
+    id: [String, games mongo doc ID],
     updatedData: {
         <!-- Only include data here that should be updated! Options Include: -->
         "universityID": [Integer, ID of university where game is being played],
@@ -298,7 +298,7 @@ run npm install -g jest
 * Request Body:
 ```
 {
-    _id: [String, games mongo doc ID]
+    id: [String, games mongo doc ID]
 }
 ```
 * Response Body:
@@ -342,7 +342,7 @@ run npm install -g jest
 * Request Body:
 ```
 {
-    _id: [String, university mongo doc ID]
+    id: [String, university mongo doc ID]
 }
 ```
 * Response Body:
@@ -423,7 +423,7 @@ run npm install -g jest
 * Request Body:
 ```
 {
-    "_id": [String, mongo doc ID of university to be updated],
+    "id": [String, mongo doc ID of university to be updated],
     updatedData: {
         <!-- Only include data here that should be updated! Options Include: -->
         "description": [String, Updated university description],
@@ -456,7 +456,7 @@ run npm install -g jest
 * Request Body:
 ```
 {
-    "_id": [String, mongo doc ID]
+    "id": [String, mongo doc ID]
 }
 ```
 * Response Body:
@@ -501,7 +501,7 @@ run npm install -g jest
 * Request Body:
 ```
 {
-    "_id": [String, teams mongo doc ID]
+    "id": [String, teams mongo doc ID]
 }
 ```
 * Response Body:
@@ -637,7 +637,6 @@ run npm install -g jest
     "_id": "[String, users mongo doc ID]",
     "roleID": [Integer, users permission integer (See above)],
     "universityID": [Integer, ID of users university],
-    "teamID": [Integer, ID of users affiliated team],
     "firstName": "[String, users first name]",
     "lastName": "[String, users last name]",
     "email": "[String, users email]"
@@ -663,7 +662,6 @@ run npm install -g jest
     "_id": "[String, users mongo doc ID]",
     "roleID": [Integer, users permission integer (See above)],
     "universityID": [Integer, ID of users university],
-    "teamID": [Integer, ID of users affiliated team],
     "firstName": "[String, users first name]",
     "lastName": "[String, users last name]",
     "email": "[String, users email]"
@@ -712,7 +710,7 @@ run npm install -g jest
 ```
 IF Requesting User is an ADMIN:
 {
-    "_id": [String, users mongo doc ID],
+    "id": [String, users mongo doc ID],
     "canMarket": [Boolean, value to update with]
 }
 IF Requesting User is NOT AN ADMIN:

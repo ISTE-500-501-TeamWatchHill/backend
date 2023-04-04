@@ -7,61 +7,81 @@ const { validateNonNullNumberID, validateNonNullStringHashID } = require('../aut
 
 // Get all university information
 router.get('/all', async (req, res) => {
-    const unis = await UniversityInfo.find({});
-    if (unis === null) {
-        res.status(400).json({'error': 'No Data Found'});
+    try {
+        const unis = await UniversityInfo.find({});
+        if (unis === null) {
+            res.status(400).json({'error': 'No Data Found'});
+        }
+        else {
+            res.status(200).json(unis);
+        }
     }
-    else {
-        res.status(200).json(unis);
+    catch (error) {
+        res.status(500).json({"error": error});
     }
 });
 
 // Get all unapproved universities
 router.get('/unapproved', async (req, res) => {
-    const unis = await UniversityInfo.find({approvalStatus: false});
-    if (unis === null) {
-        res.status(400).json({'error': 'No Data Found'});
+    try {
+        const unis = await UniversityInfo.find({approvalStatus: false});
+        if (unis === null) {
+            res.status(400).json({'error': 'No Data Found'});
+        }
+        else {
+            res.status(200).json(unis);
+        }
     }
-    else {
-        res.status(200).json(unis);
+    catch (error) {
+        res.status(500).json({"error": error});
     }
 });
 
 // Get all university information by _id
 router.post('/byID', async (req, res) => {
-    if (req.body && req.body._id) {
-        if (!validateNonNullStringHashID(req.body._id)) {
-            return res.status(403).json({ 'error': '`_id` Provided Invalid' });
-        }
-        const uni = await UniversityInfo.findOne({_id: req.body._id});
-        if (uni === null) {
-            res.status(400).json({'error': 'No Data Found'});
+    try {
+        if (req.body && req.body._id) {
+            if (!validateNonNullStringHashID(req.body.id)) {
+                return res.status(403).json({ 'error': '`id` Provided Invalid' });
+            }
+            const uni = await UniversityInfo.findOne({_id: req.body.id});
+            if (uni === null) {
+                res.status(400).json({'error': 'No Data Found'});
+            }
+            else {
+                res.status(200).json(uni);
+            }
         }
         else {
-            res.status(200).json(uni);
+            res.status(400).json({'error': 'Request must contain id'});
         }
     }
-    else {
-        res.status(400).json({'error': 'Request must contain _id'});
+    catch (error) {
+        res.status(500).json({"error": error});
     }
 });
 
 // Get all university information by University id
 router.post('/byUniversityID', async (req, res) => {
-    if (req.body && req.body.universityID) {
-        if (!validateNonNullNumberID(req.body.universityID)) {
-            return res.status(403).json({ 'error': 'University ID Provided Invalid' });
-        }
-        const uni = await UniversityInfo.findOne({"universityID": req.body.universityID});
-        if (uni === null) {
-            res.status(400).json({'error': 'No Data Found'});
+    try {
+        if (req.body && req.body.universityID) {
+            if (!validateNonNullNumberID(req.body.universityID)) {
+                return res.status(403).json({ 'error': 'University ID Provided Invalid' });
+            }
+            const uni = await UniversityInfo.findOne({"universityID": req.body.universityID});
+            if (uni === null) {
+                res.status(400).json({'error': 'No Data Found'});
+            }
+            else {
+                res.status(200).json(uni);
+            }
         }
         else {
-            res.status(200).json(uni);
+            res.status(400).json({'error': 'Request must contain university ID'});
         }
     }
-    else {
-        res.status(400).json({'error': 'Request must contain university ID'});
+    catch (error) {
+        res.status(500).json({"error": error});
     }
 });
 
