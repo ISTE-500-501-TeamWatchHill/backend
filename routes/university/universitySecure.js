@@ -72,7 +72,6 @@ router.put('/', async (req, res) => {
                 const updUni = await UniversityInfo.findOne({_id: ObjectId(req.body.id)});
         
                 if (updUni) {
-                    console.log(`There is a university to update with name of ${req.body.name}.`)
                     await UniversityInfo.updateOne({_id: updUni._id}, req.body)
                     .then(async function (data, err){
                         if (err) {
