@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { TeamInfo, UserInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
-const { validateNonNullNumberID, validateEmail, validateName } = require('../auth/validation');
+const { validateNonNullStringHashID, validateNonNullNumberID, validateEmail, validateName } = require('../auth/validation');
 
 /*
     Writing this shit out because I'm fucking dizzy
@@ -106,15 +106,14 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Update existing team // TODO: Guessing this got missed in the copy+paste
-/*
+// Update existing team
 router.put('/', async (req, res) => {
     if (req.body && req.body._id) {
-        const updGame = await GameInfo.findOne({_id: ObjectId(req.body._id)});
+        const updTeam = await TeamInfo.findOne({_id: req.body._id});
 
-        if (updGame) {
+        if (updTeam) {
             const {updatedData} = req.body;
-            GameInfo.updateOne({_id: updGame._id}, updatedData, function (err, result) {
+            TeamInfo.updateOne({_id: updTeam._id}, updatedData, function (err, result) {
                 if (err !== null) {
                     res.status(500).json(err);
                 }
@@ -124,12 +123,31 @@ router.put('/', async (req, res) => {
             });
         }
         else {
-            res.status(404).json({"error": "Game Not Found"});
+            res.status(404).json({"error": "Team Not Found"});
         }
     }
     else {
         res.status(404).json({"error": "Incomplete Input"});
     }
 });
-*/
+
+// Delete existing team by ID
+router.delete('/', async (req, res) => {
+    if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
+        if (!validateNonNullStringHashID(req.body._id)) {
+            return res.status(403).json({ 'error': '`_id` Provided Invalid' });
+        }
+        try {
+            const deleted = await TeamInfo.deleteOne({_id: req.body._id});
+            res.status(200).json(deleted);
+        }
+        catch (error) {
+            res.status(500).json({"error": error});
+        }
+    }
+    else {
+        res.status(401).json({'error': "you are not authorized to complete this action"});
+    }
+});
+
 module.exports = router;
