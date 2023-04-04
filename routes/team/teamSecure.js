@@ -112,45 +112,55 @@ router.post('/', async (req, res) => {
 
 // Update existing team
 router.put('/', async (req, res) => {
-    if (req.body && req.body._id) {
-        const updTeam = await TeamInfo.findOne({_id: req.body._id});
+    try {
+        if (req.body && req.body._id) {
+            const updTeam = await TeamInfo.findOne({_id: req.body._id});
 
-        if (updTeam) {
-            const {updatedData} = req.body;
-            TeamInfo.updateOne({_id: updTeam._id}, updatedData, function (err, result) {
-                if (err !== null) {
-                    res.status(500).json(err);
-                }
-                else {
-                    res.status(200).json({result});
-                }
-            });
+            if (updTeam) {
+                const {updatedData} = req.body;
+                TeamInfo.updateOne({_id: updTeam._id}, updatedData, function (err, result) {
+                    if (err !== null) {
+                        res.status(500).json(err);
+                    }
+                    else {
+                        res.status(200).json({result});
+                    }
+                });
+            }
+            else {
+                res.status(404).json({"error": "Team Not Found"});
+            }
         }
         else {
-            res.status(404).json({"error": "Team Not Found"});
+            res.status(404).json({"error": "Incomplete Input"});
         }
     }
-    else {
-        res.status(404).json({"error": "Incomplete Input"});
+    catch (error) {
+        res.status(500).json({"error": error});
     }
 });
 
 // Delete existing team by ID
 router.delete('/', async (req, res) => {
-    if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
-        if (!validateNonNullStringHashID(req.body._id)) {
-            return res.status(403).json({ 'error': '`_id` Provided Invalid' });
+    try {
+        if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
+            if (!validateNonNullStringHashID(req.body._id)) {
+                return res.status(403).json({ 'error': '`_id` Provided Invalid' });
+            }
+            try {
+                const deleted = await TeamInfo.deleteOne({_id: req.body._id});
+                res.status(200).json(deleted);
+            }
+            catch (error) {
+                res.status(500).json({"error": error});
+            }
         }
-        try {
-            const deleted = await TeamInfo.deleteOne({_id: req.body._id});
-            res.status(200).json(deleted);
-        }
-        catch (error) {
-            res.status(500).json({"error": error});
+        else {
+            res.status(401).json({'error': "you are not authorized to complete this action"});
         }
     }
-    else {
-        res.status(401).json({'error': "you are not authorized to complete this action"});
+    catch (error) {
+        res.status(500).json({"error": error});
     }
 });
 
