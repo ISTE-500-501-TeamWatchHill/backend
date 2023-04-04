@@ -20,11 +20,11 @@ mongoose.connect(mongoString);
 const db = mongoose.connection;
 mongoose.set('strictQuery', false);
 db.on('error', (error) => {
-    console.log(error)
+    console.error(error)
 })
 
 db.once('connected', () => {
-    console.log('Database Connected');
+    console.info('Database Connected');
 })
 
 app.use(cors({origin: '*'}));
@@ -76,5 +76,5 @@ app.use('/teamPub', teamPublic);
 app.use('/gamePub', gamePublic);
 
 app.listen(port, () => {
-  console.log(`App listening on port ${port} 🙃`);
+  console.info(`App listening on port ${port} 🙃`);
 });
