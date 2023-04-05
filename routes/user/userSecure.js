@@ -90,4 +90,40 @@ router.put('/permission', async (req, res) => {
     }
 });
 
+// Update existing user by _id
+router.put('/', async (req, res) => {
+    try {
+        if (req.user.roleID == 14139 || req.user.roleID == 21149) {
+            if (req.body && req.body.id) {
+                const updUser = await UserInfo.findOne({_id: ObjectId(req.body.id)});
+
+                if (updUser) {
+                    await UserInfo.updateOne({_id: updUser._id}, req.body)
+                    .then(async function (data, err){
+                        if (err) {
+                            res.status(500).json(err);
+                        }
+                        else {
+                            const updated = await UserInfo.findOne({_id: req.body.id});
+                            res.status(200).json({updated});
+                        }
+                    });
+                }
+                else {
+                    res.status(404).json({"error": "User Not Found"});
+                }
+            }
+            else {
+                res.status(404).json({"error": "Incomplete Input"});
+            }
+        }
+        else {
+            res.status(401).json({'error': "you are not authorized to complete this action"});
+        }
+    }
+    catch (error) {
+        res.status(500).json({"error": error});
+    }
+});
+
 module.exports = router;
