@@ -97,7 +97,6 @@ router.post('/', async (req, res) => {
     try {
         if (req.body && req.body.firstName && req.body.lastName && req.body.roleID && req.body.email && req.body.password) {
             if (req.user.roleID == 14139 || req.user.roleID == 21149) {
-                console.log(req.body);
                 const { firstName, lastName, roleID, email, password } = req.body;
 
                 if (!validateName(firstName)) {
@@ -123,18 +122,14 @@ router.post('/', async (req, res) => {
                 //Check to see if user exists (must have unique email)
                 const existing = await UserInfo.findOne({email: email});
 
-                console.log("Successful attempt to find matching user");
-
                 if (existing) {
                     res.status(400).json({'error': 'Email Provided already exists!'});
                 } else {
-                    console.log("EMail is unique");
                     // email needs to end in an approved domain
                     const emailDomain = email.split('@')[1];
                     const domain = await UniversityInfo.findOne({ 'domain': emailDomain }, {});
                     if (domain) {
                         const { universityID } = domain;
-                        console.log(universityID);
 
                         //Encrypt user password
                         let hashedPassword = await bcrypt.hash(password, 10);
@@ -196,6 +191,27 @@ router.put('/', async (req, res) => {
             }
             else {
                 res.status(404).json({"error": "Incomplete Input"});
+            }
+        }
+        else {
+            res.status(401).json({'error': "you are not authorized to complete this action"});
+        }
+    }
+    catch (error) {
+        res.status(500).json({"error": error});
+    }
+});
+
+// Delete user by _id
+router.delete('/', async (req, res) => {
+    try {
+        if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
+            try {
+                const deleted = await UserInfo.deleteOne({_id: req.body.id});
+                res.status(200).json(deleted);
+            }
+            catch (error) {
+                res.status(500).json({"error": error});
             }
         }
         else {
