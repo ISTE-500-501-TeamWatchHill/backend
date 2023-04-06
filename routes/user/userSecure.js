@@ -100,23 +100,23 @@ router.post('/', async (req, res) => {
                 const { firstName, lastName, roleID, email, password } = req.body;
 
                 if (!validateName(firstName)) {
-                    return res.status(403).json({ 'error': '`first name` Provided Invalid' });
+                    return res.status(400).json({ 'error': '`first name` Provided Invalid' });
                 }
 
                 if (!validateName(lastName)) {
-                    return res.status(403).json({ 'error': '`last name` Provided Invalid' });
+                    return res.status(400).json({ 'error': '`last name` Provided Invalid' });
                 }
 
                 if (!validateNonNullNumberID(roleID)) {
-                    return res.status(403).json({ 'error': '`roleID` Provided Invalid' });
+                    return res.status(400).json({ 'error': '`roleID` Provided Invalid' });
                 }
 
                 if (!validateEmail(email)) {
-                    return res.status(403).json({ 'error': '`email` Provided Invalid' });
+                    return res.status(400).json({ 'error': '`email` Provided Invalid' });
                 }
 
                 if (!validatePassword(password)) {
-                    return res.status(403).json({ 'error': '`password` Provided Invalid' });
+                    return res.status(400).json({ 'error': '`password` Provided Invalid' });
                 }
                 
                 //Check to see if user exists (must have unique email)
@@ -157,8 +157,7 @@ router.post('/', async (req, res) => {
             }
         }
         else {
-            console.log("CRAP");
-            res.status(500).json({'error': "missing inputs"});
+            res.status(400).json({'error': "missing inputs"});
         }
     }
     catch (error) {
@@ -190,7 +189,7 @@ router.put('/', async (req, res) => {
                 }
             }
             else {
-                res.status(404).json({"error": "Incomplete Input"});
+                res.status(400).json({"error": "Incomplete Input"});
             }
         }
         else {
