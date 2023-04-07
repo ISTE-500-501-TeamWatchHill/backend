@@ -15,7 +15,7 @@ Also, message Aidan, Vicky, Alexis, or Aaron for credential information. PORT=##
 
 ##### Run app
 ```
-nodemon app.js
+npm start
 ```
 
 ##### Run tests
