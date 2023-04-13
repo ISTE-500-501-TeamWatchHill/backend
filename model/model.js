@@ -97,6 +97,10 @@ const userInfoSchema = new mongoose.Schema({
         required: true,
         type: Number
     },
+    teamID: {
+        required: false,
+        type: String
+    },
     universityID: {
         required: true,
         type: Number
