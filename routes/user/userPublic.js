@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { UserInfo, Permissions } = require('../../model/model');
+const { UserInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
 let ObjectId = require("bson-objectid");
 const { validateNonNullNumberID, validateNonNullStringHashID } = require('../auth/validation');

@@ -25,7 +25,7 @@ router.get('/getMarketable', async (req, res) => {
 
 router.post('/getUserProfile', async (req, res) => {
     try {
-        const user = await UserInfo.findOne({_id: req.user.user_id}, {hashedPassword: 0, __v: 0});
+        const user = await UserInfo.findOne({_id: req.body.id}, {hashedPassword: 0, __v: 0});
 
         if (user) {
             res.status(200).json(user);
@@ -49,7 +49,7 @@ router.put('/updateMarketingPreferences', async (req, res) => {
             });
         }
         else {
-            UserInfo.updateOne({_id: ObjectId(req.user._id)}, {canMarket: req.body.canMarket}, function(err, doc) {
+            UserInfo.updateOne({_id: ObjectId(req.user.id)}, {canMarket: req.body.canMarket}, function(err, doc) {
                 if (err) return res.status(500).json({error: err});
                 return res.status(200).json({doc});
             });
@@ -97,7 +97,7 @@ router.post('/', async (req, res) => {
     try {
         if (req.body && req.body.firstName && req.body.lastName && req.body.roleID && req.body.email && req.body.password) {
             if (req.user.roleID == 14139 || req.user.roleID == 21149) {
-                const { firstName, lastName, roleID, email, password } = req.body;
+                const { firstName, lastName, roleID, teamID, email, password } = req.body;
 
                 if (!validateName(firstName)) {
                     return res.status(400).json({ 'error': '`first name` Provided Invalid' });
@@ -136,6 +136,7 @@ router.post('/', async (req, res) => {
 
                         const data = new UserInfo({
                             roleID,
+                            teamID, 
                             universityID,
                             firstName,
                             lastName,
@@ -179,7 +180,7 @@ router.put('/', async (req, res) => {
                             res.status(500).json(err);
                         }
                         else {
-                            const updated = await UserInfo.findOne({_id: req.body.id});
+                            const updated = await UserInfo.findOne({_id: ObjectId(req.body.id)});
                             res.status(200).json({updated});
                         }
                     });
