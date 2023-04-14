@@ -1,25 +1,22 @@
+const { default: ObjectID } = require('bson-objectid');
 const mongoose = require('mongoose');
 
 const gameInfoSchema = new mongoose.Schema({
-    gameID: {
-        required: false,
-        type: Number
-    },
     universityID: {
         required: true,
         type: Number
     },
     homeTeam: {
         required: true,
-        type: String
+        type: ObjectID
     },
     awayTeam: {
         required: true,
-        type: String
+        type: ObjectID
     },
     winningTeam: {
         required: false,
-        type: String
+        type: ObjectID
     },
     gameFinished: {
         required: false,
@@ -31,23 +28,12 @@ const gameInfoSchema = new mongoose.Schema({
     }
 }, {collection: "gameInfo"});
 
-const permissionsSchema = new mongoose.Schema({
-    permissionCode: {
-        required: true,
-        type: Number
-    },
-    permissionDescription: {
-        required: true,
-        type: String
-    }
-}, {collection: "permissions"});
-
 const teamInfoSchema = new mongoose.Schema({
     universityID: {
         required: true,
         type: Number
     },
-    players: [ String ],
+    players: [ ObjectID ],
     description: {
         required: false,
         type: String
@@ -72,7 +58,7 @@ const universityInfoSchema = new mongoose.Schema({
         required: true,
         type: String
     },
-    moderatorIDs: [ String ],
+    moderatorIDs: [ ObjectID ],
     name: {
         required: true, 
         type: String
@@ -96,6 +82,10 @@ const userInfoSchema = new mongoose.Schema({
     roleID: {
         required: true,
         type: Number
+    },
+    teamID: {
+        required: false,
+        type: ObjectID
     },
     universityID: {
         required: true,
@@ -125,9 +115,8 @@ const userInfoSchema = new mongoose.Schema({
 }, {collection: "userInfo"});
 
 const GameInfo = mongoose.model('gameInfo', gameInfoSchema);
-const Permissions = mongoose.model('permissions', permissionsSchema);
 const TeamInfo = mongoose.model('teamInfo', teamInfoSchema);
 const UniversityInfo = mongoose.model('universityInfo', universityInfoSchema);
 const UserInfo = mongoose.model('userInfo', userInfoSchema);
 
-module.exports = {GameInfo, Permissions, TeamInfo, UniversityInfo, UserInfo};
+module.exports = {GameInfo, TeamInfo, UniversityInfo, UserInfo};

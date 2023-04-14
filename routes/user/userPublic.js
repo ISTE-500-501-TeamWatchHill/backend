@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { UserInfo, Permissions } = require('../../model/model');
+const { UserInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
 let ObjectId = require("bson-objectid");
 const { validateNonNullNumberID, validateNonNullStringHashID } = require('../auth/validation');
@@ -39,6 +39,46 @@ router.get('/all', async (req, res) => {
         }
         else {
             res.status(200).json(user);
+        }
+    }
+    catch (error) {
+        res.status(500).json({"error": error});
+    }
+});
+
+
+router.get('/allExpanded', async (req, res) => {
+    try {
+        const users = await UserInfo.aggregate([
+            {
+                $lookup: {
+                    from: "teamInfo",
+                    localField: "teamID",
+                    foreignField: "_id",
+                    as: "teamInfoJoined"
+                }
+            },
+            {
+                $project:
+                {
+                    roleID: 1,
+                    universityID: 1,
+                    firstName: 1,
+                    lastName: 1,
+                    email: 1,
+                    teamInfoJoined: {
+                        players: 1,
+                        description: 1
+                    }
+                }
+            }
+        ]);
+
+        if (users === null) {
+            return res.status(400).json({'error': 'No Data Found'});
+        }
+        else {
+            return res.status(200).json(users);
         }
     }
     catch (error) {

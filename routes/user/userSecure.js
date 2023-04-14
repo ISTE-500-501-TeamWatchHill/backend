@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { UserInfo, Permissions } = require('../../model/model');
+const { UserInfo, UniversityInfo, Permissions } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
+const bcrypt = require('bcrypt');
 let ObjectId = require("bson-objectid");
+const { validateEmail, validateName, validateNonNullNumberID, validatePassword } = require('../auth/validation');
 
 // Get all non-admin users that have allowed marketable emails
 router.get('/getMarketable', async (req, res) => {
@@ -23,7 +25,7 @@ router.get('/getMarketable', async (req, res) => {
 
 router.post('/getUserProfile', async (req, res) => {
     try {
-        const user = await UserInfo.findOne({_id: req.user.user_id}, {hashedPassword: 0, __v: 0});
+        const user = await UserInfo.findOne({_id: req.body.id}, {hashedPassword: 0, __v: 0});
 
         if (user) {
             res.status(200).json(user);
@@ -47,7 +49,7 @@ router.put('/updateMarketingPreferences', async (req, res) => {
             });
         }
         else {
-            UserInfo.updateOne({_id: ObjectId(req.user._id)}, {canMarket: req.body.canMarket}, function(err, doc) {
+            UserInfo.updateOne({_id: ObjectId(req.user.id)}, {canMarket: req.body.canMarket}, function(err, doc) {
                 if (err) return res.status(500).json({error: err});
                 return res.status(200).json({doc});
             });
@@ -83,6 +85,137 @@ router.put('/permission', async (req, res) => {
                 }
             }
             
+        }
+    }
+    catch (error) {
+        res.status(500).json({"error": error});
+    }
+});
+
+// Create new user
+router.post('/', async (req, res) => {
+    try {
+        if (req.body && req.body.firstName && req.body.lastName && req.body.roleID && req.body.email && req.body.password) {
+            if (req.user.roleID == 14139 || req.user.roleID == 21149) {
+                const { firstName, lastName, roleID, teamID, email, password } = req.body;
+
+                if (!validateName(firstName)) {
+                    return res.status(400).json({ 'error': '`first name` Provided Invalid' });
+                }
+
+                if (!validateName(lastName)) {
+                    return res.status(400).json({ 'error': '`last name` Provided Invalid' });
+                }
+
+                if (!validateNonNullNumberID(roleID)) {
+                    return res.status(400).json({ 'error': '`roleID` Provided Invalid' });
+                }
+
+                if (!validateEmail(email)) {
+                    return res.status(400).json({ 'error': '`email` Provided Invalid' });
+                }
+
+                if (!validatePassword(password)) {
+                    return res.status(400).json({ 'error': '`password` Provided Invalid' });
+                }
+                
+                //Check to see if user exists (must have unique email)
+                const existing = await UserInfo.findOne({email: email});
+
+                if (existing) {
+                    res.status(400).json({'error': 'Email Provided already exists!'});
+                } else {
+                    // email needs to end in an approved domain
+                    const emailDomain = email.split('@')[1];
+                    const domain = await UniversityInfo.findOne({ 'domain': emailDomain }, {});
+                    if (domain) {
+                        const { universityID } = domain;
+
+                        //Encrypt user password
+                        let hashedPassword = await bcrypt.hash(password, 10);
+
+                        const data = new UserInfo({
+                            roleID,
+                            teamID, 
+                            universityID,
+                            firstName,
+                            lastName,
+                            email,
+                            canMarket: false,
+                            hashedPassword
+                        });
+    
+                        const inserted = await data.save();
+                        const newUser = await UserInfo.findOne({_id: inserted._id});
+                        res.status(200).json(newUser);
+                    } else {
+                        res.status(400).json({'error': 'Email Provided does not have a university domain registered in the system! Contact your university for more information.'});
+                    }
+                }
+            }
+            else {
+                res.status(401).json({'error': "you are not authorized to complete this action"});
+            }
+        }
+        else {
+            res.status(400).json({'error': "missing inputs"});
+        }
+    }
+    catch (error) {
+        res.status(500).json({"error": error});
+    }
+});
+
+// Update existing user by _id
+router.put('/', async (req, res) => {
+    try {
+        if (req.user.roleID == 14139 || req.user.roleID == 21149) {
+            if (req.body && req.body.id) {
+                const updUser = await UserInfo.findOne({_id: ObjectId(req.body.id)});
+
+                if (updUser) {
+                    await UserInfo.updateOne({_id: updUser._id}, req.body)
+                    .then(async function (data, err){
+                        if (err) {
+                            res.status(500).json(err);
+                        }
+                        else {
+                            const updated = await UserInfo.findOne({_id: ObjectId(req.body.id)});
+                            res.status(200).json({updated});
+                        }
+                    });
+                }
+                else {
+                    res.status(404).json({"error": "User Not Found"});
+                }
+            }
+            else {
+                res.status(400).json({"error": "Incomplete Input"});
+            }
+        }
+        else {
+            res.status(401).json({'error': "you are not authorized to complete this action"});
+        }
+    }
+    catch (error) {
+        res.status(500).json({"error": error});
+    }
+});
+
+// Delete user by _id
+router.delete('/', async (req, res) => {
+    try {
+        if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
+            try {
+                const deleted = await UserInfo.deleteOne({_id: req.body.id});
+                res.status(200).json(deleted);
+            }
+            catch (error) {
+                res.status(500).json({"error": error});
+            }
+        }
+        else {
+            res.status(401).json({'error': "you are not authorized to complete this action"});
         }
     }
     catch (error) {

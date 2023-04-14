@@ -113,8 +113,8 @@ router.post('/', async (req, res) => {
 // Update existing team
 router.put('/', async (req, res) => {
     try {
-        if (req.body && req.body._id) {
-            const updTeam = await TeamInfo.findOne({_id: req.body._id});
+        if (req.body && req.body.id) {
+            const updTeam = await TeamInfo.findOne({_id: ObjectId(req.body.id)});
 
             if (updTeam) {
                 const {updatedData} = req.body;
@@ -144,11 +144,11 @@ router.put('/', async (req, res) => {
 router.delete('/', async (req, res) => {
     try {
         if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
-            if (!validateNonNullStringHashID(req.body._id)) {
+            if (!validateNonNullStringHashID(req.body.id)) {
                 return res.status(403).json({ 'error': '`_id` Provided Invalid' });
             }
             try {
-                const deleted = await TeamInfo.deleteOne({_id: req.body._id});
+                const deleted = await TeamInfo.deleteOne({_id: ObjectId(req.body.id)});
                 res.status(200).json(deleted);
             }
             catch (error) {
