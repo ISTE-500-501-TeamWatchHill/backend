@@ -25,7 +25,7 @@ router.get('/getMarketable', async (req, res) => {
 
 router.post('/getUserProfile', async (req, res) => {
     try {
-        const user = await UserInfo.findOne({_id: req.body.id}, {hashedPassword: 0, __v: 0});
+        const user = await UserInfo.findOne({_id: ObjectId(req.user.user_id)}, {hashedPassword: 0, __v: 0});
 
         if (user) {
             res.status(200).json(user);
