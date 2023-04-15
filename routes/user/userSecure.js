@@ -25,8 +25,7 @@ router.get('/getMarketable', async (req, res) => {
 
 router.post('/getUserProfile', async (req, res) => {
     try {
-        // const user = await UserInfo.findOne({_id: ObjectId(req.user.user_id)}, {hashedPassword: 0, __v: 0});
-        const user1 =  await UserInfo.aggregate([
+        const user =  await UserInfo.aggregate([
             {$match: {_id: ObjectId(req.user.user_id)}}, 
             {
                 $lookup: {
@@ -48,8 +47,8 @@ router.post('/getUserProfile', async (req, res) => {
                 }
             }
         ]);
-        if (user1[0]) {
-            res.status(200).json(user1[0]);
+        if (user[0]) {
+            res.status(200).json(user[0]);
         }
         else {
             res.status(204).json({"users": "No Users Found"});
