@@ -33,9 +33,10 @@ function validateEmail(email) {
 //      3. must not begin or end with a whitespace character
 //      4. name must only contain [a-zA-Z0-9,.'\-\s] (one or more times)
 function validateName(name) {
-    if (typeof name !== 'string') { return false; }
-    if (name.length < 1 || name.match(/^\s|^\w+\s$|\s$/)) { return false; }
-    return !!(name.match(/^[a-zA-Z0-9,.'\-\s]*$/));
+    const trimmed = name.trim();
+    if (typeof trimmed !== 'string') { return false; }
+    if (trimmed.length < 1 || trimmed.match(/^\s|^\w+\s$|\s$/)) { return false; }
+    return !!(trimmed.match(/^[a-zA-Z0-9,.'\-\s]*$/));
 }
 
 // Validates number IDs; ensuring input is a number greater than 0

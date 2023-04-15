@@ -20,13 +20,25 @@ const { validateNonNullStringHashID, validateNonNullNumberID, validateEmail, val
     -[x] validate emails belong to users with no teams
     -[x] create team w/ false approval status, name, emails, and universityID
     -[x] add new teamID to all users in team
+    -[] check if the person is an admin or register user
+        -[] if they are a registered user, BUT their email is not in the list of emails, boot them out
+        -[x] admins can pass through
 */
 
 // Create new team
 router.post('/', async (req, res) => {
-        try {
+    try {
         if (req.body && req.body.universityID && req.body.emails && req.body.name) {
             const { universityID, emails, name } = req.body;
+
+            if (req.user.roleID == 19202) {
+                if (!emails.includes(req.user.email)) {
+                    console.log("User creating team must be apart of the team");
+                    res.json({'error': 'User creating team must be apart of the team'});
+                    res.status(403);
+                    res.end();
+                }
+            }
 
             if (!validateName(name)) {
                 res.status(403).json({'error': 'Invalid Team Name Provided'});
