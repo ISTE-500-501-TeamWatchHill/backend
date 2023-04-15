@@ -65,6 +65,45 @@ router.get('/allExpanded', async (req, res) => {
     }
 });
 
+// Get one team's information + player and university info
+router.post('/byIDExpanded', async (req, res) => {
+    try {
+        const { id } = req.body;
+        const team = await TeamInfo.aggregate([
+            {$match: {_id: ObjectId(id)}},
+            {
+                $lookup: {
+                    from: "universityInfo",
+                    localField: "universityID",
+                    foreignField: "universityID",
+                    as: "universityInfo"
+                }
+            },
+            {
+                $project:
+                {
+                    approvalStatus: 1,
+                    logo: 1,
+                    description: 1,
+                    players: 1,
+                    universityName: "$universityInfo.name"
+                        
+                }
+            }
+        ]);
+
+        if (team === null) {
+            return res.status(400).json({'error': 'No Data Found'});
+        }
+        else {
+            return res.status(200).json(team);
+        }
+    }
+    catch (error) {
+        res.status(500).json({"error": error});
+    }
+});
+
 // Get all team information by id
 router.post('/byID', async (req, res) => {
     try {
