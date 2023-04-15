@@ -25,10 +25,31 @@ router.get('/getMarketable', async (req, res) => {
 
 router.post('/getUserProfile', async (req, res) => {
     try {
-        const user = await UserInfo.findOne({_id: ObjectId(req.user.user_id)}, {hashedPassword: 0, __v: 0});
-
-        if (user) {
-            res.status(200).json(user);
+        // const user = await UserInfo.findOne({_id: ObjectId(req.user.user_id)}, {hashedPassword: 0, __v: 0});
+        const user1 =  await UserInfo.aggregate([
+            {$match: {_id: ObjectId(req.user.user_id)}}, 
+            {
+                $lookup: {
+                    from: "universityInfo",
+                    localField: "universityID",
+                    foreignField: "universityID",
+                    as: "universityInfo"
+                }
+            },
+            {
+                $project: {
+                    roleID: 1,
+                    teamID: 1,
+                    universityID: 1,
+                    firstName: 1,
+                    lastName: 1,
+                    email: 1,
+                    universityName: "$universityInfo.name"
+                }
+            }
+        ]);
+        if (user1[0]) {
+            res.status(200).json(user1[0]);
         }
         else {
             res.status(204).json({"users": "No Users Found"});
