@@ -25,8 +25,8 @@ router.get('/teams', async (req, res) => {
 // Verify Team By ID
 router.put('/teams', async (req, res) => {
     try {
-        if (req.user.roleID == 14139 || req.user.roleID == 21149 && req.body._id.length > 0 && req.body._id.length == 24) {
-            TeamInfo.updateOne({_id: req.body._id}, {$set: {approvalStatus: true}}, function (err, result) {
+        if (req.user.roleID == 14139 || req.user.roleID == 21149 && req.body.id.length > 0 && req.body.id.length == 24) {
+            TeamInfo.updateOne({_id: req.body.id}, {$set: {approvalStatus: true}}, function (err, result) {
                 if (err !== null) {
                     res.status(500).json(err);
                 }
@@ -69,8 +69,8 @@ router.get('/universities', async (req, res) => {
 // Verify University By ID
 router.put('/universities', async (req, res) => {
     try {
-        if (req.user.roleID == 14139 || req.user.roleID == 21149 && req.body._id.length > 0 && req.body._id.length == 24) {
-            UniversityInfo.updateOne({_id: req.body._id}, {$set: {approvalStatus: true}}, function (err, result) {
+        if (req.user.roleID == 14139 || req.user.roleID == 21149 && req.body.id.length > 0 && req.body.id.length == 24) {
+            UniversityInfo.updateOne({_id: req.body.id}, {$set: {approvalStatus: true}}, function (err, result) {
                 if (err !== null) {
                     res.status(500).json(err);
                 }
