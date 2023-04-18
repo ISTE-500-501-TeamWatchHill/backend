@@ -12,7 +12,6 @@ router.post('/byID', async (req, res) => {
             if (!validateNonNullStringHashID(req.body.id)) {
                 res.status(403).json({'error': 'User `_id` Provided Invalid'});
             }
-            // Does the line below actually work?
             const user = await UserInfo.findOne({_id: ObjectId(req.body.id)}, {hashedPassword: 0});
             if (user === null) {
                 res.status(400).json({'error': 'No Data Found'});
@@ -66,6 +65,7 @@ router.get('/allExpanded', async (req, res) => {
                     firstName: 1,
                     lastName: 1,
                     email: 1,
+                    teamID: 1,
                     teamInfoJoined: {
                         players: 1,
                         description: 1
