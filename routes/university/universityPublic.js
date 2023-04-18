@@ -40,7 +40,7 @@ router.get('/unapproved', async (req, res) => {
 // Get all university information by _id
 router.post('/byID', async (req, res) => {
     try {
-        if (req.body && req.body._id) {
+        if (req.body && req.body.id) {
             if (!validateNonNullStringHashID(req.body.id)) {
                 return res.status(403).json({ 'error': '`id` Provided Invalid' });
             }
