@@ -24,9 +24,18 @@ const { validateNonNullStringHashID, validateNonNullNumberID, validateEmail, val
 
 // Create new team
 router.post('/', async (req, res) => {
-        try {
+    try {
         if (req.body && req.body.universityID && req.body.emails && req.body.name) {
             const { universityID, emails, name } = req.body;
+
+            if (req.user.roleID == 19202) {
+                if (!emails.includes(req.user.email)) {
+                    console.log("User creating team must be apart of the team");
+                    res.json({'error': 'User creating team must be apart of the team'});
+                    res.status(403);
+                    res.end();
+                }
+            }
 
             if (!validateName(name)) {
                 res.status(403).json({'error': 'Invalid Team Name Provided'});
@@ -110,22 +119,86 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Update existing team
+// Update existing team -- NEEDS A LOT MORE ERROR CHECKING DEAR GOD
 router.put('/', async (req, res) => {
+    console.log(req.body.updatedData);
     try {
         if (req.body && req.body.id) {
             const updTeam = await TeamInfo.findOne({_id: ObjectId(req.body.id)});
 
             if (updTeam) {
-                const {updatedData} = req.body;
+                const { universityID, emails, description, approvalStatus } = req.body.updatedData;
+                // validate and reformat input emails
+                if (!validateName(description)) {
+                    res.status(403).json({'error': 'Invalid Team Name Provided'});
+                    res.end();
+                }
+    
+                const teamExistsCheck = await TeamInfo.findOne({ description: description });
+                if (teamExistsCheck && teamExistsCheck._id) {
+                    res.status(403).json({'error': 'Team Name Provided Already Exists'});
+                    res.end();
+                }
+    
+                if (!validateNonNullNumberID(universityID)) {
+                    res.status(403).json({'error': 'Invalid University ID Provided'});
+                    res.end();
+                }
+    
+                if (emails.length < 1 || emails.length > 5) {
+                    res.status(403).json({'error': 'Invalid number of emails provided; must be between 1 and 5 users.'});
+                    res.end();
+                }
+
+                let confirmedUsers = [];
+                const validateUsers = async () => {
+                    for (const email of emails) {
+                        if (!validateEmail(email)) {
+                            res.status(403).json({'error': 'Invalid Player Email Provided: ' + email});
+                            res.end();
+                        }
+
+                        const user = await UserInfo.findOne(
+                            { email: email }, 
+                            { 
+                                teamID: 1, 
+                                _id: 1, 
+                                universityID: 1
+                            });
+                    
+                        if (user.teamID == req.body.id) {
+                            // do nothing - they already belong to this team
+                        } else if (user && user._id && (user.universityID == universityID) && (user.teamID == null)) {
+                            confirmedUsers.push(user._id);
+                        } else {
+                            res.status(403).json({'error': 'User already on a team: ' + email});
+                            res.end();
+                        } 
+                    };
+                }
+
+                await validateUsers();
+
+
+
+                // do the update
                 TeamInfo.updateOne({_id: updTeam._id}, updatedData, function (err, result) {
                     if (err !== null) {
                         res.status(500).json(err);
                     }
                     else {
-                        res.status(200).json({result});
+                        // res.status(200).json({result}); // continue on for now
                     }
                 });
+                const addTeamIdToUsers = async () => {
+                    for (const email of emails) {
+                        await UserInfo.updateOne({ "email": email }, { $set: { "teamID": dta._id }});
+                    }
+                };
+                await addTeamIdToUsers();
+                res.json({ "message": "Team update successful"});
+                res.status(200);
+                res.end();
             }
             else {
                 res.status(404).json({"error": "Team Not Found"});
@@ -140,7 +213,7 @@ router.put('/', async (req, res) => {
     }
 });
 
-// Delete existing team by ID
+// Delete existing team by ID -- NEEDS A LOT MORE ERROR CHECKING DEAR GOD
 router.delete('/', async (req, res) => {
     try {
         if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
