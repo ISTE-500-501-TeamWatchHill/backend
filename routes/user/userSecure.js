@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { UserInfo, UniversityInfo, Permissions } = require('../../model/model');
+const { UserInfo, UniversityInfo, TeamInfo, Permissions } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
 const bcrypt = require('bcrypt');
 let ObjectId = require("bson-objectid");
@@ -196,13 +196,26 @@ router.put('/', async (req, res) => {
                 if (updUser) {
                     await UserInfo.updateOne({_id: updUser._id}, req.body)
                     .then(async function (data, err){
+                        // const addUserIdToTeam = async () => {
+                        //     const team = await TeamInfo.findOne({_id: ObjectId(req.body.teamID)});
+                        //     let playersUpd = team.players;
+                        //     console.log(req.body);
+                        //     playersUpd.push(new ObjectId(req.body.id));
+                        //     console.log(playersUpd);
+                        //     console.log(team);
+                        //     const upd = await TeamInfo.updateOne({_id: ObjectId(req.body.teamID)}, {$set: {players: playersUpd}});
+                        //     console.log(upd);
+                        // }
                         if (err) {
                             res.status(500).json(err);
                         }
                         else {
                             const updated = await UserInfo.findOne({_id: ObjectId(req.body.id)});
+                            //TODO: add the players id to the team 
                             res.status(200).json({updated});
                         }
+                        //await addUserIdToTeam();
+                       
                     });
                 }
                 else {
@@ -218,7 +231,8 @@ router.put('/', async (req, res) => {
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        console.log(error);
+        res.status(500).json({"error": ""+error});
     }
 });
 
