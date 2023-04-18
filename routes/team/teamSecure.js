@@ -3,6 +3,7 @@ const router = express.Router();
 const { TeamInfo, UserInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
 const { validateNonNullStringHashID, validateNonNullNumberID, validateEmail, validateName } = require('../auth/validation');
+let ObjectId = require("bson-objectid");
 
 /*
     Writing this shit out because I'm fucking dizzy
@@ -121,7 +122,6 @@ router.post('/', async (req, res) => {
 
 // Update existing team -- NEEDS A LOT MORE ERROR CHECKING DEAR GOD
 router.put('/', async (req, res) => {
-    console.log(req.body.updatedData);
     try {
         if (req.body && req.body.id) {
             const updTeam = await TeamInfo.findOne({_id: ObjectId(req.body.id)});
@@ -131,12 +131,6 @@ router.put('/', async (req, res) => {
                 // validate and reformat input emails
                 if (!validateName(description)) {
                     res.status(403).json({'error': 'Invalid Team Name Provided'});
-                    res.end();
-                }
-    
-                const teamExistsCheck = await TeamInfo.findOne({ description: description });
-                if (teamExistsCheck && teamExistsCheck._id) {
-                    res.status(403).json({'error': 'Team Name Provided Already Exists'});
                     res.end();
                 }
     
@@ -166,9 +160,7 @@ router.put('/', async (req, res) => {
                                 universityID: 1
                             });
                     
-                        if (user.teamID == req.body.id) {
-                            // do nothing - they already belong to this team
-                        } else if (user && user._id && (user.universityID == universityID) && (user.teamID == null)) {
+                        if (user && user._id && (user.universityID == universityID) && (user.teamID == null)) {
                             confirmedUsers.push(user._id);
                         } else {
                             res.status(403).json({'error': 'User already on a team: ' + email});
@@ -179,12 +171,19 @@ router.put('/', async (req, res) => {
 
                 await validateUsers();
 
-
+                updatedDataWithIDs = {
+                    players: confirmedUsers,
+                    universityID: universityID || null,
+                    description: description || null,
+                    approvalStatus: approvalStatus,
+                }
 
                 // do the update
-                TeamInfo.updateOne({_id: updTeam._id}, updatedData, function (err, result) {
+                TeamInfo.updateOne({_id: Object(req.body.id)}, updatedDataWithIDs, function (err, result) {
                     if (err !== null) {
-                        res.status(500).json(err);
+                        res.json({"error": "Error updating the team"});
+                        res.status(500);
+                        res.end();
                     }
                     else {
                         // res.status(200).json({result}); // continue on for now
@@ -192,11 +191,11 @@ router.put('/', async (req, res) => {
                 });
                 const addTeamIdToUsers = async () => {
                     for (const email of emails) {
-                        await UserInfo.updateOne({ "email": email }, { $set: { "teamID": dta._id }});
+                        await UserInfo.updateOne({ "email": email }, { $set: { "teamID": req.body.id }});
                     }
                 };
                 await addTeamIdToUsers();
-                res.json({ "message": "Team update successful"});
+                res.json({ "message": "Team update successful" });
                 res.status(200);
                 res.end();
             }
@@ -209,7 +208,7 @@ router.put('/', async (req, res) => {
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.status(500).json({"error": ""+error});
     }
 });
 
