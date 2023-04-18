@@ -160,12 +160,7 @@ router.put('/', async (req, res) => {
                                 universityID: 1
                             });
                     
-                        console.log(user);
-                        console.log(user.universityID == universityID);
-                        console.log(user.teamID == null);
-                        console.log(user.teamID == updTeam.players.includes(user.teamID));
                         if (user && user._id && (user.universityID == universityID) && (user.teamID == null || updTeam.players.includes(user._id))) {
-                            console.log("in if-- " + user.email);
                             confirmedUsers.push(user._id);
                         } else {
                             res.json({'error': 'User already on a team: ' + email});
