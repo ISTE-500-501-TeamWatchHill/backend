@@ -120,7 +120,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Update existing team -- NEEDS A LOT MORE ERROR CHECKING DEAR GOD
+// Update existing team
 router.put('/', async (req, res) => {
     try {
         if (req.body && req.body.id) {
@@ -148,7 +148,7 @@ router.put('/', async (req, res) => {
                 const validateUsers = async () => {
                     for (const email of emails) {
                         if (!validateEmail(email)) {
-                            res.status(403).json({'error': 'Invalid Player Email Provided: ' + email});
+                            res.status(400).json({'error': 'Invalid Player Email Provided: ' + email});
                             res.end();
                         }
 
@@ -160,10 +160,16 @@ router.put('/', async (req, res) => {
                                 universityID: 1
                             });
                     
-                        if (user && user._id && (user.universityID == universityID) && (user.teamID == null)) {
+                        console.log(user);
+                        console.log(user.universityID == universityID);
+                        console.log(user.teamID == null);
+                        console.log(user.teamID == updTeam.players.includes(user.teamID));
+                        if (user && user._id && (user.universityID == universityID) && (user.teamID == null || updTeam.players.includes(user._id))) {
+                            console.log("in if-- " + user.email);
                             confirmedUsers.push(user._id);
                         } else {
-                            res.status(403).json({'error': 'User already on a team: ' + email});
+                            res.json({'error': 'User already on a team: ' + email});
+                            res.status(400);
                             res.end();
                         } 
                     };
@@ -171,11 +177,14 @@ router.put('/', async (req, res) => {
 
                 await validateUsers();
 
-                updatedDataWithIDs = {
+                // confirmedUsers // _id's of users we want in team -- some may already belong; some may not
+                // updTeam.players // _id's of users already in database on the team
+
+                let updatedDataWithIDs = {
                     players: confirmedUsers,
                     universityID: universityID || null,
                     description: description || null,
-                    approvalStatus: approvalStatus,
+                    approvalStatus: approvalStatus || false,
                 }
 
                 // do the update
@@ -195,16 +204,24 @@ router.put('/', async (req, res) => {
                     }
                 };
                 await addTeamIdToUsers();
+                const removeTeamIdFromOldUsers = async () => {
+                    for (const oldPlayer of updTeam.players) {
+                        if(!confirmedUsers.includes(oldPlayer)) {
+                            await UserInfo.updateOne({ "_id": ObjectId(oldPlayer) }, { $set: { "teamID": null }});
+                        }
+                    }
+                }
+                await removeTeamIdFromOldUsers();
                 res.json({ "message": "Team update successful" });
                 res.status(200);
                 res.end();
             }
             else {
-                res.status(404).json({"error": "Team Not Found"});
+                res.status(400).json({"error": "Team Not Found"});
             }
         }
         else {
-            res.status(404).json({"error": "Incomplete Input"});
+            res.status(400).json({"error": "Incomplete Input"});
         }
     }
     catch (error) {
