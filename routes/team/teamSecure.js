@@ -6,10 +6,6 @@ const { validateNonNullStringHashID, validateNonNullNumberID, validateEmail, val
 let ObjectId = require("bson-objectid");
 
 /*
-    Writing this shit out because I'm fucking dizzy
-
-    // TODO: Work on invites and moderator approvals
-
     -[x] take in name, emails, and universityID
     -[x] validate name
     -[x] validate if name is already used
@@ -224,27 +220,46 @@ router.put('/', async (req, res) => {
     }
 });
 
-// Delete existing team by ID -- NEEDS A LOT MORE ERROR CHECKING DEAR GOD
+// Delete existing team by ID
 router.delete('/', async (req, res) => {
+    console.log(req.body);
     try {
         if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
-            if (!validateNonNullStringHashID(req.body.id)) {
+            if (!ObjectId.isValid(req.body.id)) {
                 return res.status(403).json({ 'error': '`_id` Provided Invalid' });
             }
             try {
-                const deleted = await TeamInfo.deleteOne({_id: ObjectId(req.body.id)});
-                res.status(200).json(deleted);
+                const teamToBeDeleted = await TeamInfo.findOne({"_id": ObjectId(req.body.id)});
+                const removeTeamIDFromPlayers = async () => {
+                    for (const player of teamToBeDeleted.players) {
+                        await UserInfo.updateOne({ "_id": ObjectId(player._id) }, { $set: { "teamID": null }});
+                    }
+                }
+                await removeTeamIDFromPlayers();
+                const deleted = await TeamInfo.deleteOne({"_id": ObjectId(req.body.id)});
+
+                res.json(
+                    {"Team Deleted": teamToBeDeleted}
+                );
+                res.status(200);
+                res.end();
             }
             catch (error) {
-                res.status(500).json({"error": error});
+                res.json({"error": ""+error});
+                res.status(500);
+                res.end();
             }
         }
         else {
-            res.status(401).json({'error': "you are not authorized to complete this action"});
+            res.json({'error': "You are not authorized to complete this action"});
+            res.status(401);
+            res.end()
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": ""+error});
+        res.status(500);
+        res.end();
     }
 });
 
