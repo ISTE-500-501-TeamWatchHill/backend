@@ -14,9 +14,9 @@ const {
 router.post('/', async (req, res) => {
     // Our register logic starts here
     try {
-        const { firstName, lastName, email, canMarket, password } = req.body;
+        const { firstName, lastName, email, canMarket, password, universityID } = req.body;
 
-        if (firstName && lastName && email && password) {
+        if (firstName && lastName && email && password && universityID) {
             // validate all input before adding to db
             if (!validateName(firstName)) {
                 return res.status(403).json({ 'error': 'First Name Invalid' });
@@ -30,10 +30,16 @@ router.post('/', async (req, res) => {
             if (!validatePassword(password)) {
                 return res.status(403).json({ 'error': 'Password Invalid' });
             }
+            if (!validateNonNullNumberID(universityID)){
+                return res.status(403).json({ 'error': 'University ID Invalid' });
+            }
 
             // email needs to end in an approved domain
             const emailDomain = email.split('@')[1];
-            const domain = await UniversityInfo.findOne({ 'domain': emailDomain }, {});
+            const univDomain = await UniversityInfo.findOne({ 'universityID': universityID }, {});
+            if (univDomain !== emailDomain) { 
+                return res.status(403).json({ 'error': "University and Domain must match" });
+            }
             if (domain) {
                 // Validate if user exist in our database
                 const oldUser = await UserInfo.findOne({ email });
@@ -42,7 +48,6 @@ router.post('/', async (req, res) => {
                     return res.status(409).send("User Already Exist. Please Login");
                 }
 
-                const { universityID } = domain;
 
                 //Encrypt user password
                 let hashedPassword = await bcrypt.hash(password, 10);
