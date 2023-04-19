@@ -222,7 +222,6 @@ router.put('/', async (req, res) => {
 
 // Delete existing team by ID
 router.delete('/', async (req, res) => {
-    console.log(req.body);
     try {
         if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
             if (!ObjectId.isValid(req.body.id)) {
@@ -235,7 +234,9 @@ router.delete('/', async (req, res) => {
                         await UserInfo.updateOne({ "_id": ObjectId(player._id) }, { $set: { "teamID": null }});
                     }
                 }
-                await removeTeamIDFromPlayers();
+                if (teamToBeDeleted.players && teamToBeDeleted.players.length >= 1) {
+                    await removeTeamIDFromPlayers();
+                }
                 const deleted = await TeamInfo.deleteOne({"_id": ObjectId(req.body.id)});
 
                 res.json(
