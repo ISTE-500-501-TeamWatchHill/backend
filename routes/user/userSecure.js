@@ -238,22 +238,38 @@ router.put('/', async (req, res) => {
 
 // Delete user by _id
 router.delete('/', async (req, res) => {
+    console.log(req.body);
     try {
         if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
-            try {
-                const deleted = await UserInfo.deleteOne({_id: req.body.id});
-                res.status(200).json(deleted);
+            try {                
+                const userToBeDeleted = await UserInfo.findOne({_id: ObjectId(req.body.id)});
+                const teamToBeUpdated = await TeamInfo.updateOne(
+                    { _id: ObjectId(userToBeDeleted.teamID) },
+                    { $pull: { players: req.body.id } }
+                );
+                const deleted = await UserInfo.deleteOne({_id: ObjectId(req.body.id)});
+                res.json({
+                    "Deleted Player": userToBeDeleted
+                })
+                res.status(200);
+                res.end();
             }
             catch (error) {
-                res.status(500).json({"error": error});
+                res.json({"error": ""+error});
+                res.status(500)
+                res.end();
             }
         }
         else {
-            res.status(401).json({'error': "you are not authorized to complete this action"});
+            res.json({'error': "You are not authorized to complete this action"});
+            res.status(401);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": ""+error});
+        res.status(500);
+        res.end();
     }
 });
 
