@@ -74,7 +74,7 @@ function validateIsBoolean(v) {
 // Validates input is a valid ISO Date
 function validateISODateTime(datetime) {
     if (typeof datetime !== 'string') { return false; }
-    if (!(datetime.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]{3})?Z$/))) { return false; }
+    if (!(datetime.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}$/))) { return false; }
     const test = new Date(datetime);
     return !isNaN(test);
 }
