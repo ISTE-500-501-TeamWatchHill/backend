@@ -238,7 +238,6 @@ router.put('/', async (req, res) => {
 
 // Delete user by _id
 router.delete('/', async (req, res) => {
-    console.log(req.body);
     try {
         if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
             try {                
