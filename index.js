@@ -58,22 +58,22 @@ const gamePublic = require('./routes/game/gamePublic.js');
 
 
 // Universal Route Definitions
-app.use('/', defaultRoute);
-app.use('/login', loginRoutes);
-app.use('/register', registerRoutes);
+app.use('/api/', defaultRoute);
+app.use('/api/login', loginRoutes);
+app.use('/api/register', registerRoutes);
 
 // Secure Route Definitions
-app.use('/admin', auth, adminSecure);
-app.use('/userSec', auth, userSecure);
-app.use('/universitySec', auth, universitySecure);
-app.use('/teamSec', auth, teamSecure);
-app.use('/gameSec', auth, gameSecure);
+app.use('/api/admin', auth, adminSecure);
+app.use('/api/userSec', auth, userSecure);
+app.use('/api/universitySec', auth, universitySecure);
+app.use('/api/teamSec', auth, teamSecure);
+app.use('/api/gameSec', auth, gameSecure);
 
 // Public Route Definitions
-app.use('/userPub', userPublic);
-app.use('/universityPub', universityPublic);
-app.use('/teamPub', teamPublic);
-app.use('/gamePub', gamePublic);
+app.use('/api/userPub', userPublic);
+app.use('/api/universityPub', universityPublic);
+app.use('/api/teamPub', teamPublic);
+app.use('/api/gamePub', gamePublic);
 
 app.listen(port, () => {
   console.info(`App listening on port ${port} 🙃`);
