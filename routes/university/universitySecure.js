@@ -65,14 +65,14 @@ router.post('/', async (req, res) => {
 router.put('/', async (req, res) => {
     try {
         if (req.user.roleID == 14139 || req.user.roleID == 21149) {
-            if (req.body && req.body.id) {
+            if (req.body && req.body.id && req.body.updatedData) {
                 if (!validateNonNullStringHashID(req.body.id)) {
                     return res.status(403).json({ 'error': '`_id` Provided Invalid' });
                 }
                 const updUni = await UniversityInfo.findOne({_id: ObjectId(req.body.id)});
         
                 if (updUni) {
-                    await UniversityInfo.updateOne({_id: updUni._id}, req.body)
+                    await UniversityInfo.updateOne({_id: updUni._id}, req.body.updatedData)
                     .then(async function (data, err){
                         if (err) {
                             res.status(500).json(err);

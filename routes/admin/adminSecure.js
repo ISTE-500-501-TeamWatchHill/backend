@@ -24,52 +24,68 @@ router.get('/teams', async (req, res) => {
 
 // Verify Team By ID
 router.put('/teams', async (req, res) => {
-    if (req.user.roleID == 14139 || req.user.roleID == 21149 && req.body._id.length > 0) {
-        TeamInfo.updateOne({_id: req.body._id}, {$set: {approvalStatus: true}}, function (err, result) {
-            if (err !== null) {
-                res.status(500).json(err);
-            }
-            else {
-                res.status(200).json({result});
-            }
-        });
+    try {
+        if (req.user.roleID == 14139 || req.user.roleID == 21149 && req.body.id.length > 0 && req.body.id.length == 24) {
+            TeamInfo.updateOne({_id: req.body.id}, {$set: {approvalStatus: true}}, function (err, result) {
+                if (err !== null) {
+                    res.status(500).json(err);
+                }
+                else {
+                    res.status(200).json({result});
+                }
+            });
+        }
+        else {
+            res.status(401).json({'error': "you are not authorized to complete this action"});
+        }
     }
-    else {
-        res.status(401).json({'error': "you are not authorized to complete this action"});
+    catch (error) {
+        res.status(500).json({"error": error});
     }
 });
 
 // Get Unverified Universities
 router.get('/universities', async (req, res) => {
-    if (req.user.roleID == 14139 || req.user.roleID == 21149) {
-        const unverifiedTeams = await UniversityInfo.find({approvalStatus: false});
-
-        if (unverifiedTeams) {
-            res.status(200).json(unverifiedTeams);
+    try {
+        if (req.user.roleID == 14139 || req.user.roleID == 21149) {
+            const unverifiedTeams = await UniversityInfo.find({approvalStatus: false});
+    
+            if (unverifiedTeams) {
+                res.status(200).json(unverifiedTeams);
+            }
+            else {
+                return res.status(400).json({'error': 'No Data Found'});
+            }
         }
         else {
-            return res.status(400).json({'error': 'No Data Found'});
+            res.status(401).json({'error': "you are not authorized to complete this action"});
         }
     }
-    else {
-        res.status(401).json({'error': "you are not authorized to complete this action"});
+    catch (error) {
+        res.status(500).json({"error": error});
     }
 });
 
 // Verify University By ID
 router.put('/universities', async (req, res) => {
-    if (req.user.roleID == 14139 || req.user.roleID == 21149 && req.body._id.length > 0) {
-        UniversityInfo.updateOne({_id: req.body._id}, {$set: {approvalStatus: true}}, function (err, result) {
-            if (err !== null) {
-                res.status(500).json(err);
-            }
-            else {
-                res.status(200).json({result});
-            }
-        });
+    try {
+        if (req.user.roleID == 14139 || req.user.roleID == 21149 && req.body.id.length > 0 && req.body.id.length == 24) {
+            UniversityInfo.updateOne({_id: req.body.id}, {$set: {approvalStatus: true}}, function (err, result) {
+                if (err !== null) {
+                    res.status(500).json(err);
+                }
+                else {
+                    res.status(200).json({result});
+                }
+            });
+        }
+        else {
+            res.status(401).json({'error': "you are not authorized to complete this action"});
+        }
     }
-    else {
-        res.status(401).json({'error': "you are not authorized to complete this action"});
+    
+    catch (error) {
+        res.status(500).json({"error": error});
     }
 });
 

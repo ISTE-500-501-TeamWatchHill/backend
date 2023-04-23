@@ -91,7 +91,7 @@ run npm install -g jest
 {
     [  
         {
-            "_id": [String, mongo doc ID],
+            "id": [String, mongo doc ID],
             "teamID": [Integer, team ID],
             "universityID": [Integer, university ID that team belongs to],
             "players": [String array, mongo doc IDs of users in this team],
@@ -112,7 +112,7 @@ run npm install -g jest
 * Request Body:
 ```
 {
-    _id: [String, mongo doc ID of team to be verified]
+    id: [String, mongo doc ID of team to be verified]
 }
 ```
 * Response Body:
@@ -164,7 +164,7 @@ run npm install -g jest
 * Request Body:
 ```
 {
-    _id: [String, mongo doc ID of university to be verified]
+    id: [String, mongo doc ID of university to be verified]
 }
 ```
 * Response Body:
@@ -580,7 +580,7 @@ run npm install -g jest
 * Request Body:
 ```
 {
-    "_id": [String, mongo doc ID of team to be updated],
+    "id": [String, mongo doc ID of team to be updated],
     updatedData: {
         <!-- Only include data here that should be updated! Options Include: -->
         "players": [String Array, mongo doc IDs of team members],
@@ -611,7 +611,7 @@ run npm install -g jest
 * Request Body:
 ```
 {
-    "_id": [String, teams mongo doc ID]
+    "id": [String, teams mongo doc ID]
 }
 ```
 * Response Body:
