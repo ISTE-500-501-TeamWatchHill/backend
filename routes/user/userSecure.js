@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { UserInfo, UniversityInfo, Permissions } = require('../../model/model');
+const { UserInfo, UniversityInfo, TeamInfo, Permissions } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
 const bcrypt = require('bcrypt');
 let ObjectId = require("bson-objectid");
 const { validateEmail, validateName, validateNonNullNumberID, validatePassword } = require('../auth/validation');
+const { default: ObjectID } = require('bson-objectid');
 
 // Get all non-admin users that have allowed marketable emails
 router.get('/getMarketable', async (req, res) => {
@@ -182,7 +183,7 @@ router.post('/', async (req, res) => {
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.status(500).json({"error": error+""});
     }
 });
 
@@ -196,13 +197,17 @@ router.put('/', async (req, res) => {
                 if (updUser) {
                     await UserInfo.updateOne({_id: updUser._id}, req.body)
                     .then(async function (data, err){
+                        const teamToAdd = async () => {
+                            await TeamInfo.updateOne({_id: req.body.teamID}, {$push: {players: updUser._id}});
+                        }
+                        teamToAdd();
                         if (err) {
-                            res.status(500).json(err);
+                            res.status(500).json(err+"");
                         }
                         else {
                             const updated = await UserInfo.findOne({_id: ObjectId(req.body.id)});
                             res.status(200).json({updated});
-                        }
+                        }                       
                     });
                 }
                 else {
@@ -218,7 +223,8 @@ router.put('/', async (req, res) => {
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        console.log(error);
+        res.status(500).json({"error": ""+error});
     }
 });
 
@@ -226,20 +232,35 @@ router.put('/', async (req, res) => {
 router.delete('/', async (req, res) => {
     try {
         if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
-            try {
-                const deleted = await UserInfo.deleteOne({_id: req.body.id});
-                res.status(200).json(deleted);
+            try {                
+                const userToBeDeleted = await UserInfo.findOne({_id: ObjectId(req.body.id)});
+                const teamToBeUpdated = await TeamInfo.updateOne(
+                    { _id: ObjectId(userToBeDeleted.teamID) },
+                    { $pull: { players: req.body.id } }
+                );
+                const deleted = await UserInfo.deleteOne({_id: ObjectId(req.body.id)});
+                res.json({
+                    "Deleted Player": userToBeDeleted
+                })
+                res.status(200);
+                res.end();
             }
             catch (error) {
-                res.status(500).json({"error": error});
+                res.json({"error": ""+error});
+                res.status(500)
+                res.end();
             }
         }
         else {
-            res.status(401).json({'error': "you are not authorized to complete this action"});
+            res.json({'error': "You are not authorized to complete this action"});
+            res.status(401);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": ""+error});
+        res.status(500);
+        res.end();
     }
 });
 
