@@ -5,6 +5,7 @@ require('dotenv').config(); //initialize dotenv
 const bcrypt = require('bcrypt');
 let ObjectId = require("bson-objectid");
 const { validateEmail, validateName, validateNonNullNumberID, validatePassword } = require('../auth/validation');
+const { default: ObjectID } = require('bson-objectid');
 
 // Get all non-admin users that have allowed marketable emails
 router.get('/getMarketable', async (req, res) => {
@@ -182,7 +183,7 @@ router.post('/', async (req, res) => {
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.status(500).json({"error": error+""});
     }
 });
 
@@ -196,6 +197,10 @@ router.put('/', async (req, res) => {
                 if (updUser) {
                     await UserInfo.updateOne({_id: updUser._id}, req.body)
                     .then(async function (data, err){
+                        const teamToAdd = async () => {
+                            await TeamInfo.updateOne({_id: req.body.teamID}, {$push: {players: updUser._id}});
+                        }
+                        teamToAdd();
                         // const addUserIdToTeam = async () => {
                         //     const team = await TeamInfo.findOne({_id: ObjectId(req.body.teamID)});
                         //     let playersUpd = team.players;
@@ -207,7 +212,7 @@ router.put('/', async (req, res) => {
                         //     console.log(upd);
                         // }
                         if (err) {
-                            res.status(500).json(err);
+                            res.status(500).json(err+"");
                         }
                         else {
                             const updated = await UserInfo.findOne({_id: ObjectId(req.body.id)});
