@@ -207,9 +207,7 @@ router.put('/', async (req, res) => {
                         else {
                             const updated = await UserInfo.findOne({_id: ObjectId(req.body.id)});
                             res.status(200).json({updated});
-                        }
-                        //await addUserIdToTeam();
-                       
+                        }                       
                     });
                 }
                 else {
