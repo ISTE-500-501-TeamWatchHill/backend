@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { UniversityInfo } = require('../../model/model');
+const { UniversityInfo, TeamInfo, UserInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
 let ObjectId = require("bson-objectid");
 const { validateNonNullNumberID, validateName, validateNonNullStringHashID } = require('../auth/validation');
@@ -69,6 +69,9 @@ router.put('/', async (req, res) => {
                 if (!validateNonNullStringHashID(req.body.id)) {
                     return res.status(403).json({ 'error': '`_id` Provided Invalid' });
                 }
+                if (req.body.universityID) {
+                    return res.status(400).json({ 'error': 'Not Allowed to update university ID' });
+                }
                 const updUni = await UniversityInfo.findOne({_id: ObjectId(req.body.id)});
         
                 if (updUni) {
@@ -104,11 +107,17 @@ router.put('/', async (req, res) => {
 router.delete('/', async (req, res) => {
     try {
         if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
-            if (!validateNonNullStringHashID(req.body.id)) {
+            if (!validateNonNullNumberID(req.body.id)) {
                 return res.status(403).json({ 'error': '`id` Provided Invalid' });
             }
             try {
-                const deleted = await UniversityInfo.deleteOne({_id: req.body.id});
+                const deleted = await UniversityInfo.deleteOne({universityID: req.body.id});
+                //delete all teams with this id, delete all users with this id 
+                const deleteTeamsAndUsers = async () => {
+                    const teams = await TeamInfo.deleteMany({universityID: req.body.id});
+                    const users = await UserInfo.deleteMany({universityID: req.body.id});
+                }
+                deleteTeamsAndUsers();
                 res.status(200).json(deleted);
             }
             catch (error) {
