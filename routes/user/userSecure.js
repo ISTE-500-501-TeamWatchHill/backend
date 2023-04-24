@@ -201,22 +201,11 @@ router.put('/', async (req, res) => {
                             await TeamInfo.updateOne({_id: req.body.teamID}, {$push: {players: updUser._id}});
                         }
                         teamToAdd();
-                        // const addUserIdToTeam = async () => {
-                        //     const team = await TeamInfo.findOne({_id: ObjectId(req.body.teamID)});
-                        //     let playersUpd = team.players;
-                        //     console.log(req.body);
-                        //     playersUpd.push(new ObjectId(req.body.id));
-                        //     console.log(playersUpd);
-                        //     console.log(team);
-                        //     const upd = await TeamInfo.updateOne({_id: ObjectId(req.body.teamID)}, {$set: {players: playersUpd}});
-                        //     console.log(upd);
-                        // }
                         if (err) {
                             res.status(500).json(err+"");
                         }
                         else {
                             const updated = await UserInfo.findOne({_id: ObjectId(req.body.id)});
-                            //TODO: add the players id to the team 
                             res.status(200).json({updated});
                         }
                         //await addUserIdToTeam();
