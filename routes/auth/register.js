@@ -85,12 +85,10 @@ router.post('/', async (req, res) => {
                 res.status(201).json({ user: userReturned });
             }
             else {
-                // check this status code..
                 res.status(403).json({ 'error': 'Email Domain Does Not Match Accepted' });
             }
         }
         else {
-            // check this status code..
             res.status(403).json({ 'error': 'All Input Not Found, Please Check Your Request' });
         }
     }

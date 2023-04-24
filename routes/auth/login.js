@@ -50,9 +50,11 @@ router.post('/', async (req, res) => {
 
         }
     } catch (err) {
-        res.status(500).send('Server Error Occurred');
+        res.send('Server Error Occurred');
+        res.status(500);
+        res.end();
     }
-    // Our register logic ends here
+    // Our login logic ends here
 });
 
 module.exports = router;
