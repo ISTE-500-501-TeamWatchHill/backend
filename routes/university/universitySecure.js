@@ -69,6 +69,9 @@ router.put('/', async (req, res) => {
                 if (!validateNonNullStringHashID(req.body.id)) {
                     return res.status(403).json({ 'error': '`_id` Provided Invalid' });
                 }
+                if (req.body.universityID) {
+                    return res.status(400).json({ 'error': 'Not Allowed to update university ID' });
+                }
                 const updUni = await UniversityInfo.findOne({_id: ObjectId(req.body.id)});
         
                 if (updUni) {
