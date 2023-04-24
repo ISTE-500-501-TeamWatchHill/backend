@@ -35,9 +35,9 @@ router.post('/', async (req, res) => {
             }
 
             // email needs to end in an approved domain
-            const emailDomain = email.split('@')[1];
-            const univDomain = await UniversityInfo.findOne({ 'universityID': universityID }, {});
-            if (univDomain !== emailDomain) { 
+            const { domain } = await UniversityInfo.findOne({ 'universityID': universityID }, {});
+            const emailDomain = email.trim().split('@')[1];
+            if (domain !== emailDomain) { 
                 return res.status(403).json({ 'error': "University and Domain must match" });
             }
             if (domain) {
@@ -95,7 +95,7 @@ router.post('/', async (req, res) => {
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.status(500).json({"error": ""+error});
     }
     // Our register logic ends here
 });
