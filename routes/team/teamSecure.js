@@ -212,11 +212,14 @@ router.put('/', async (req, res) => {
                 await addTeamIdToUsers();
                 const removeTeamIdFromOldUsers = async () => {
                     for (const oldPlayer of updTeam.players) {
-                        if(!confirmedUsers.includes(oldPlayer)) {
+                        if(!confirmedUsers.map(user => user.toString()).includes(oldPlayer.toString())) { // used to be on the team, but is no longer
+                            console.log("removing teamID for: ", oldPlayer);
                             await UserInfo.updateOne({ "_id": ObjectId(oldPlayer) }, { $set: { "teamID": null }});
                         }
                     }
                 }
+                console.log("updated team: ", confirmedUsers);
+                console.log("old team: ", updTeam.players);
                 await removeTeamIdFromOldUsers();
                 res.json({ "message": "Team update successful" });
                 res.status(200);
