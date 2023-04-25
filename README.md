@@ -82,9 +82,7 @@ run npm install -g jest
 * Authorization: Header Token, Company Admin
 * Request Body:
 ```
-{
-
-}
+{ empty }
 ```
 * Response Body:
 ```
