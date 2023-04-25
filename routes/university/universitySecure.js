@@ -12,13 +12,15 @@ router.post('/', async (req, res) => {
             if (req.user.roleID == 14139 || req.user.roleID == 21149) {
                 const { universityID, domain, moderatorIDs, name } = req.body;
                 if (!validateNonNullNumberID(universityID)) {
-                    return res.status(403).json({ 'error': '`universityID` Provided Invalid' });
+                    res.json({ 'error': '`universityID` Provided Invalid' });
+                    res.status(403);
+                    res.end();
                 }
 
-                // TODO: Validate domain and moderatorIDs
-
                 if (!validateName(name)) {
-                    return res.status(403).json({ 'error': '`name` Provided Invalid' });
+                    res.json({ 'error': '`name` Provided Invalid' });
+                    res.status(403);
+                    res.end();
                 }
                 
                 // Check to see if university exists
@@ -36,28 +38,32 @@ router.post('/', async (req, res) => {
                         approvalStatus: false
                     });
 
-                    if (req.body.logo) {
-                        // TODO: Validate logo input
-                        // How logo??
-                    }
                     if (req.body.description) {
                         data.description = req.body.description;
                     }
                     const inserted = await data.save();
                     const newUni = await UniversityInfo.findOne({_id: inserted._id});
-                    res.status(200).json(newUni);
+                    res.json(newUni);
+                    res.status(200);
+                    res.end();
                 }
             }
             else {
-                res.status(401).json({'error': "you are not authorized to complete this action"});
+                res.json({'error': "you are not authorized to complete this action"});
+                res.status(401);
+                res.end();
             }
         }
         else {
-            res.status(500).json({'error': "missing inputs"});
+            res.json({'error': "missing inputs"});
+            res.status(500);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -67,10 +73,14 @@ router.put('/', async (req, res) => {
         if (req.user.roleID == 14139 || req.user.roleID == 21149) {
             if (req.body && req.body.id) {
                 if (!validateNonNullStringHashID(req.body.id)) {
-                    return res.status(403).json({ 'error': '`_id` Provided Invalid' });
+                    res.json({ 'error': '`_id` Provided Invalid' });
+                    res.status(403);
+                    res.end();
                 }
                 if (req.body.universityID) {
-                    return res.status(400).json({ 'error': 'Not Allowed to update university ID' });
+                    res.json({ 'error': 'Not Allowed to update university ID' });
+                    res.status(400);
+                    res.end();
                 }
                 const updUni = await UniversityInfo.findOne({_id: ObjectId(req.body.id)});
         
@@ -78,20 +88,28 @@ router.put('/', async (req, res) => {
                     await UniversityInfo.updateOne({_id: updUni._id}, req.body)
                     .then(async function (data, err){
                         if (err) {
-                            res.status(500).json(err);
+                            res.json(err);
+                            res.status(500);
+                            res.end();
                         }
                         else {
                             const updated = await UniversityInfo.findOne({_id: req.body.id});
-                            res.status(200).json({updated});
+                            res.json({updated});
+                            res.status(200);
+                            res.end();
                         }
                     });
                 }
                 else {
-                    res.status(404).json({"error": "University Not Found"});
+                    res.json({"error": "University Not Found"});
+                    res.status(404);
+                    res.end();
                 }
             }
             else {
-                res.status(404).json({"error": "Incomplete Input"});
+                res.json({"error": "Incomplete Input"});
+                res.status(404);
+                res.end();
             }
         }
         else {
@@ -99,7 +117,9 @@ router.put('/', async (req, res) => {
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -108,7 +128,9 @@ router.delete('/', async (req, res) => {
     try {
         if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
             if (!validateNonNullNumberID(req.body.id)) {
-                return res.status(403).json({ 'error': '`id` Provided Invalid' });
+                res.json({ 'error': '`id` Provided Invalid' });
+                res.status(403);
+                res.end();
             }
             try {
                 const deleted = await UniversityInfo.deleteOne({universityID: req.body.id});
@@ -118,18 +140,26 @@ router.delete('/', async (req, res) => {
                     const users = await UserInfo.deleteMany({universityID: req.body.id});
                 }
                 deleteTeamsAndUsers();
-                res.status(200).json(deleted);
+                res.json(deleted);
+                res.status(200);
+                res.end();
             }
             catch (error) {
-                res.status(500).json({"error": error});
+                res.json({"error": error});
+                res.status(500);
+                res.end();
             }
         }
         else {
-            res.status(401).json({'error': "you are not authorized to complete this action"});
+            res.json({'error': "you are not authorized to complete this action"});
+            res.status(401);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 
