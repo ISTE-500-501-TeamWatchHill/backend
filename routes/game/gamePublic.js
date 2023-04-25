@@ -10,22 +10,32 @@ router.post('/byID', async (req, res) => {
     try {
         if (req.body && req.body.id) {
             if (!validateNonNullStringHashID(req.body.id)){
-                return res.status(403).json({'error': 'Game ID provided invalid'});
+                res.json({'error': 'Game ID provided invalid'});
+                res.status(403);
+                res.end();
             }
             const game = await GameInfo.findOne({"_id": ObjectId(req.body.id)});
             if (game === null) {
-                return res.status(400).json({'error': 'No Data Found'});
+                res.json({'error': 'No Data Found'});
+                res.status(400);
+                res.end();
             }
             else {
-                return res.status(200).json(game);
+                res.json(game);
+                res.status(200);
+                res.end();
             }
         }
         else {
-            return res.status(400).json({'error': 'Request must contain game ID'});
+            res.json({'error': 'Request must contain game ID'});
+            res.status(400);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -33,7 +43,9 @@ router.post('/byTeamID', async (req, res) => {
     try {
         if (req.body && req.body.id) {
             if (!validateNonNullStringHashID(req.body.id)){
-                return res.status(403).json({'error': 'Game ID provided invalid'});
+                res.json({'error': 'Game ID provided invalid'});
+                res.status(403);
+                res.end();
             }
             const games = await GameInfo.aggregate([
                 {$match: { $or: [
@@ -91,18 +103,26 @@ router.post('/byTeamID', async (req, res) => {
                 }
             ]);
             if (games === null) {
-                return res.status(400).json({'error': 'No Data Found'});
+                res.json({'error': 'No Data Found'});
+                res.status(400);
+                res.end();
             }
             else {
-                return res.status(200).json(games);
+                res.json(games);
+                res.status(200);
+                res.end();
             }
         }
         else {
-            return res.status(400).json({'error': 'Request must contain game ID'});
+            res.json({'error': 'Request must contain game ID'});
+            res.status(400);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -110,7 +130,9 @@ router.post('/byUniversityID', async (req, res) => {
     try {
         if (req.body && req.body.id) {
             if (!validateNonNullNumberID(req.body.id)){
-                return res.status(403).json({'error': 'University ID provided invalid'});
+                res.json({'error': 'University ID provided invalid'});
+                res.status(403);
+                res.end();
             }
             const games = await GameInfo.aggregate([
                 {$match: { $or: [
@@ -167,18 +189,26 @@ router.post('/byUniversityID', async (req, res) => {
                 }
             ]);
             if (games === null) {
-                return res.status(400).json({'error': 'No Data Found'});
+                res.json({'error': 'No Data Found'});
+                res.status(400);
+                res.end();
             }
             else {
-                return res.status(200).json(games);
+                res.json(games);
+                res.status(200);
+                res.end();
             }
         }
         else {
-            return res.status(400).json({'error': 'Request must contain game ID'});
+            res.json({'error': 'Request must contain game ID'});
+            res.status(400);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": ""+error});
+        res.json({"error": ""+error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -187,14 +217,20 @@ router.get('/all', async (req, res) => {
     try {
         const game = await GameInfo.find({});
         if (game === null) {
-            return res.status(400).json({'error': 'No Data Found'});
+            res.json({'error': 'No Data Found'});
+            res.status(400);
+            res.end();
         }
         else {
-            return res.status(200).json(game);
+            res.json(game);
+            res.status(200);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -254,14 +290,20 @@ router.get('/allExpanded', async (req, res) => {
         ]);
 
         if (game === null) {
-            return res.status(400).json({'error': 'No Data Found'});
+            res.json({'error': 'No Data Found'});
+            res.status(400);
+            res.end();
         }
         else {
-            return res.status(200).json(game);
+            res.json(game);
+            res.status(200);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 

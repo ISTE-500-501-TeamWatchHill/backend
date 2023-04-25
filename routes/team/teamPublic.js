@@ -10,14 +10,20 @@ router.get('/all', async (req, res) => {
     try {
         const teams = await TeamInfo.find({});
         if (teams === null) {
-            res.status(400).json({'error': 'No Data Found'});
+            res.json({'error': 'No Data Found'});
+            res.status(400);
+            res.end();
         }
         else {
-            res.status(200).json(teams);
+            res.json(teams);
+            res.status(200);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -54,14 +60,20 @@ router.get('/allExpanded', async (req, res) => {
         ]);
 
         if (teams === null) {
-            return res.status(400).json({'error': 'No Data Found'});
+            res.json({'error': 'No Data Found'});
+            res.status(400);
+            res.end();
         }
         else {
-            return res.status(200).json(teams);
+            res.json(teams);
+            res.status(200);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -93,14 +105,20 @@ router.post('/byIDExpanded', async (req, res) => {
         ]);
 
         if (team === null) {
-            return res.status(400).json({'error': 'No Data Found'});
+            res.json({'error': 'No Data Found'});
+            res.status(400);
+            res.end();
         }
         else {
-            return res.status(200).json(team);
+            res.json(team);
+            res.status(200);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -110,22 +128,32 @@ router.post('/byID', async (req, res) => {
         const { id } = req.body;
         if (req.body && id) {
             if (!validateNonNullStringHashID(id)) {
-                return res.status(403).json({'error': 'Invalid `_id`'});
+                res.json({'error': 'Invalid `_id`'});
+                res.status(403);
+                res.end();
             }
             const team = await TeamInfo.findOne({"_id": ObjectId(id)});
             if (team === null) {
-                res.status(400).json({'error': 'No Data Found'});
+                res.json({'error': 'No Data Found'});
+                res.status(400);
+                res.end();
             }
             else {
-                res.status(200).json(team);
+                res.json(team);
+                res.status(200);
+                res.end();
             }
         }
         else {
-            res.status(400).json({'error': 'Request must contain team ID'});
+            res.json({'error': 'Request must contain team ID'});
+            res.status(400);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -134,23 +162,33 @@ router.post('/byUniID', async (req, res) => {
         const { universityID } = req.body;
         if (req.body && universityID) {
             if (!validateNonNullNumberID(universityID)) {
-                return res.status(403).json({'error': 'Invalid `universityID`'});
+                res.json({'error': 'Invalid `universityID`'});
+                res.status(403);
+                res.end();
             }
             const unis = await TeamInfo.find({universityID: universityID});
 
             if (unis === null) {
-                res.status(400).json({'error': 'No Data Found'});
+                res.json({'error': 'No Data Found'});
+                res.status(400);
+                res.end();
             }
             else {
-                res.status(200).json(unis);
+                res.json(unis);
+                res.status(200);
+                res.end();
             }
         }
         else {
-            res.status(400).json({'error': 'Request must contain university ID'});
+            res.json({'error': 'Request must contain university ID'});
+            res.status(400);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 

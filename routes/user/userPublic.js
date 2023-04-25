@@ -10,22 +10,32 @@ router.post('/byID', async (req, res) => {
     try {
         if (req.body && req.body.id) {
             if (!validateNonNullStringHashID(req.body.id)) {
-                res.status(403).json({'error': 'User `_id` Provided Invalid'});
+                res.json({'error': 'User `_id` Provided Invalid'});
+                res.status(403);
+                res.end();
             }
             const user = await UserInfo.findOne({_id: ObjectId(req.body.id)}, {hashedPassword: 0});
             if (user === null) {
-                res.status(400).json({'error': 'No Data Found'});
+                res.json({'error': 'No Data Found'});
+                res.status(400);
+                res.end();
             }
             else {
-                res.status(200).json(user);
+                res.json(user);
+                res.status(200);
+                res.end();
             }
         }
         else {
-            res.status(400).json({'error': 'Request must contain user ID'})
+            res.json({'error': 'Request must contain user ID'});
+            res.status(400);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -34,14 +44,18 @@ router.get('/all', async (req, res) => {
     try {
         const user = await UserInfo.find({}, {hashedPassword: 0});
         if (user === null) {
-            res.status(400).json({'error': 'No Data Found'});
+            res.json({'error': 'No Data Found'});
+            res.status(400);
+            res.end();
         }
         else {
             res.status(200).json(user);
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -75,14 +89,20 @@ router.get('/allExpanded', async (req, res) => {
         ]);
 
         if (users === null) {
-            return res.status(400).json({'error': 'No Data Found'});
+            res.json({'error': 'No Data Found'});
+            res.status(400);
+            res.end();
         }
         else {
-            return res.status(200).json(users);
+            res.json(users);
+            res.status(200);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 

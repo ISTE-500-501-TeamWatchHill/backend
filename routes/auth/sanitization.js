@@ -19,9 +19,4 @@ function sanitize(v) {
     return v;
 };
 
-// TODO
-function salt(v) {
-    return null;
-}
-
 module.exports = sanitize;

@@ -13,7 +13,9 @@ router.put('/', async (req, res) => {
     try {
         if (req.body && req.body.id) {
             if(!validateNonNullStringHashID(req.body.id)) {
-                res.status(400).json({'error': 'Game ID provided invalid'});
+                res.json({'error': 'Game ID provided invalid'});
+                res.status(400);
+                res.end();
             }
             const updGame = await GameInfo.findOne({_id: ObjectId(req.body.id)});
 
@@ -21,23 +23,33 @@ router.put('/', async (req, res) => {
                 const { updatedData } = req.body; // TODO: Validation for this is a mess
                 GameInfo.updateOne({_id: updGame.id}, updatedData, function (err, result) {
                     if (err !== null) {
-                        res.status(500).json(err);
+                        res.json(err);
+                        res.status(500);
+                        res.end();
                     }
                     else {
-                        res.status(200).json({result});
+                        res.json({result});
+                        res.status(200);
+                        res.end();
                     }
                 });
             }
             else {
-                res.status(404).json({"error": "Game Not Found"});
+                res.json({"error": "Game Not Found"});
+                res.status(404);
+                res.end();
             }
         }
         else {
-            res.status(404).json({"error": "Incomplete Input"});
+            res.json({"error": "Incomplete Input"});
+            res.status(404);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -49,13 +61,19 @@ router.post('/', async (req, res) => {
 
             // validate all input before adding to db
             if (!validateNonNullNumberID(universityID)) {
-                res.status(403).json({ 'error': 'University ID Invalid' });
+                res.json({ 'error': 'University ID Invalid' });
+                res.status(403);
+                res.end();
             }
             if (!validateNonNullStringHashID(homeTeam)) {
-                res.status(403).json({ 'error': 'Home Team ID Invalid' });
+                res.json({ 'error': 'Home Team ID Invalid' });
+                res.status(403);
+                res.end();
             }
             if (!validateNonNullStringHashID(awayTeam)) {
-                res.status(403).json({ 'error': 'Away Team ID Invalid' });
+                res.json({ 'error': 'Away Team ID Invalid' });
+                res.status(403);
+                res.end();
             }
 
             const data = new GameInfo({
@@ -70,18 +88,26 @@ router.post('/', async (req, res) => {
             try {
                 const dta = await data.save();
                 const dataToSave = await GameInfo.findOne({_id: dta._id});
-                res.status(200).json(dataToSave);
+                res.json(dataToSave);
+                res.status(200);
+                res.end();
             }
             catch (error) {
-                res.status(500).json({'error': error});
+                res.json({'error': error});
+                res.status(500);
+                res.end();
             }
         }
         else {
-            res.status(500).json({'error': "missing inputs"});
+            res.json({'error': "missing inputs"});
+            res.status(500);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -91,18 +117,26 @@ router.delete('/', async (req, res) => {
         if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
             try {
                 const deleted = await GameInfo.deleteOne({_id: req.body.id});
-                res.status(200).json(deleted);
+                res.json(deleted);
+                res.status(200);
+                res.end();
             }
             catch (error) {
-                res.status(500).json({"error": error});
+                res.json({"error": error});
+                res.status(500);
+                res.end();
             }
         }
         else {
-            res.status(401).json({'error': "you are not authorized to complete this action"});
+            res.json({'error': "you are not authorized to complete this action"});
+            res.status(401);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 

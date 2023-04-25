@@ -5,7 +5,6 @@ require('dotenv').config(); //initialize dotenv
 const bcrypt = require('bcrypt');
 let ObjectId = require("bson-objectid");
 const { validateEmail, validateName, validateNonNullNumberID, validatePassword } = require('../auth/validation');
-const { default: ObjectID } = require('bson-objectid');
 
 // Get all non-admin users that have allowed marketable emails
 router.get('/getMarketable', async (req, res) => {
@@ -13,14 +12,20 @@ router.get('/getMarketable', async (req, res) => {
         const marketUsers = await UserInfo.find({canMarket: true, roleID: 1234}, {firstName: 1, lastName: 1, universityID: 1, email: 1});
 
         if (marketUsers.length > 0) {
-            res.status(200).json(marketUsers);
+            res.json(marketUsers);
+            res.status(200);
+            res.end();
         }
         else {
-            res.status(204).json({"users": "No Users Found"});
+            res.json({"users": "No Users Found"});
+            res.status(204);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -49,14 +54,20 @@ router.post('/getUserProfile', async (req, res) => {
             }
         ]);
         if (user[0]) {
-            res.status(200).json(user[0]);
+            res.json(user[0]);
+            res.status(200);
+            res.end();
         }
         else {
-            res.status(204).json({"users": "No Users Found"});
+            res.json({"users": "No Users Found"});
+            res.status(204);
+            res.end();
         }
     }
     catch (err) {
-        res.status(500).json(err);
+        res.json(err);
+        res.status(500);
+        res.end();
     }
 });
 
@@ -65,19 +76,33 @@ router.put('/updateMarketingPreferences', async (req, res) => {
         // check and see if the user requesting is an admin, if so check for the included id, otherwise take it right out of the token
         if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
             UserInfo.updateOne({_id: req.body.id}, {canMarket: req.body.canMarket}, function(err, doc) {
-                if (err) return res.status(500).json({error: err});
-                return res.status(200).json({doc});
+                if (err) {
+                    res.json({error: err});
+                    res.status(500);
+                    res.end();
+                } 
+                res.json({doc});
+                res.status(200);
+                res.end();
             });
         }
         else {
             UserInfo.updateOne({_id: ObjectId(req.user.id)}, {canMarket: req.body.canMarket}, function(err, doc) {
-                if (err) return res.status(500).json({error: err});
-                return res.status(200).json({doc});
+                if (err) {
+                    res.json({error: err});
+                    res.status(500);
+                    res.end();
+                } 
+                res.json({doc});
+                res.status(200);
+                res.end();
             });
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -97,10 +122,14 @@ router.put('/permission', async (req, res) => {
 
                     UserInfo.updateOne({_id: ObjectId(req.body.id)}, updatedData, function (err, result) {
                         if (err !== null) {
-                            res.status(500).json(err);
+                            res.json(err);
+                            res.status(500);
+                            res.end();
                         }
                         else {
-                            res.status(200).json({"_id": _id, "newID": req.body.roleID});
+                            res.json({"_id": _id, "newID": req.body.roleID});
+                            res.status(200);
+                            res.end();
                         }
                     });
                 }
@@ -109,7 +138,9 @@ router.put('/permission', async (req, res) => {
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -121,30 +152,42 @@ router.post('/', async (req, res) => {
                 const { firstName, lastName, roleID, teamID, email, password } = req.body;
 
                 if (!validateName(firstName)) {
-                    return res.status(400).json({ 'error': '`first name` Provided Invalid' });
+                    res.json({ 'error': '`first name` Provided Invalid' });
+                    res.status(400);
+                    res.end();
                 }
 
                 if (!validateName(lastName)) {
-                    return res.status(400).json({ 'error': '`last name` Provided Invalid' });
+                    res.json({ 'error': '`last name` Provided Invalid' });
+                    res.status(400);
+                    res.end();
                 }
 
                 if (!validateNonNullNumberID(roleID)) {
-                    return res.status(400).json({ 'error': '`roleID` Provided Invalid' });
+                    res.json({ 'error': '`roleID` Provided Invalid' });
+                    res.status(400);
+                    res.end();
                 }
 
                 if (!validateEmail(email)) {
-                    return res.status(400).json({ 'error': '`email` Provided Invalid' });
+                    res.json({ 'error': '`email` Provided Invalid' });
+                    res.status(400);
+                    res.end();
                 }
 
                 if (!validatePassword(password)) {
-                    return res.status(400).json({ 'error': '`password` Provided Invalid' });
+                    res.json({ 'error': '`password` Provided Invalid' });
+                    res.status(400);
+                    res.end();
                 }
                 
                 //Check to see if user exists (must have unique email)
                 const existing = await UserInfo.findOne({email: email});
 
                 if (existing) {
-                    res.status(400).json({'error': 'Email Provided already exists!'});
+                    res.json({'error': 'Email Provided already exists!'});
+                    res.status(400);
+                    res.end();
                 } else {
                     // email needs to end in an approved domain
                     const emailDomain = email.split('@')[1];
@@ -168,22 +211,32 @@ router.post('/', async (req, res) => {
     
                         const inserted = await data.save();
                         const newUser = await UserInfo.findOne({_id: inserted._id});
-                        res.status(200).json(newUser);
+                        res.json(newUser);
+                        res.status(200);
+                        res.end();
                     } else {
-                        res.status(400).json({'error': 'Email Provided does not have a university domain registered in the system! Contact your university for more information.'});
+                        res.json({'error': 'Email Provided does not have a university domain registered in the system! Contact your university for more information.'});
+                        res.status(400);
+                        res.end();
                     }
                 }
             }
             else {
-                res.status(401).json({'error': "you are not authorized to complete this action"});
+                res.json({'error': "you are not authorized to complete this action"});
+                res.status(401);
+                res.end();
             }
         }
         else {
-            res.status(400).json({'error': "missing inputs"});
+            res.json({'error': "missing inputs"});
+            res.status(400);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error+""});
+        res.json({"error": error+""});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -202,29 +255,40 @@ router.put('/', async (req, res) => {
                         }
                         teamToAdd();
                         if (err) {
-                            res.status(500).json(err+"");
+                            res.json(err+"");
+                            res.status(500);
+                            res.end();
                         }
                         else {
                             const updated = await UserInfo.findOne({_id: ObjectId(req.body.id)});
-                            res.status(200).json({updated});
+                            res.json({updated});
+                            res.status(200);
+                            res.end();
                         }                       
                     });
                 }
                 else {
-                    res.status(404).json({"error": "User Not Found"});
+                    res.json({"error": "User Not Found"});
+                    res.status(404);
+                    res.end();
                 }
             }
             else {
-                res.status(400).json({"error": "Incomplete Input"});
+                res.json({"error": "Incomplete Input"});
+                res.status(400);
+                res.end();
             }
         }
         else {
-            res.status(401).json({'error': "you are not authorized to complete this action"});
+            res.json({'error': "you are not authorized to complete this action"});
+            res.status(401);
+            res.end();
         }
     }
     catch (error) {
-        console.log(error);
-        res.status(500).json({"error": ""+error});
+        res.json({"error": ""+error});
+        res.status(500);
+        res.end();
     }
 });
 

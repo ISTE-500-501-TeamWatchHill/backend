@@ -14,7 +14,9 @@ router.post('/', async (req, res) => {
 
         // Validate user input
         if (!(email && password)) {
-            return res.status(400).send("All input is required");
+            res.send("All input is required");
+            res.status(400);
+            res.end();
         }
         
         // Validate if user exist in our database
@@ -43,16 +45,22 @@ router.post('/', async (req, res) => {
             };
 
             // user
-            res.status(200).json({ user: userReturned });
+            res.json({ user: userReturned });
+            res.status(200);
+            res.end();
         }
         else {
-            res.status(400).send("Invalid Credentials");
+            res.send("Invalid Credentials");
+            res.status(400);
+            res.end();
 
         }
     } catch (err) {
-        res.status(500).send('Server Error Occurred');
+        res.send('Server Error Occurred');
+        res.status(500);
+        res.end();
     }
-    // Our register logic ends here
+    // Our login logic ends here
 });
 
 module.exports = router;

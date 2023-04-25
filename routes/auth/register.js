@@ -19,33 +19,47 @@ router.post('/', async (req, res) => {
         if (firstName && lastName && email && password && universityID) {
             // validate all input before adding to db
             if (!validateName(firstName)) {
-                return res.status(403).json({ 'error': 'First Name Invalid' });
+                res.json({ 'error': 'First Name Invalid' });
+                res.status(403);
+                res.end();
             }
             if (!validateName(lastName)) {
-                return res.status(403).json({ 'error': 'Last Name Invalid' });
+                res.json({ 'error': 'Last Name Invalid' });
+                res.status(403);
+                res.end();
             }
             if (!validateEmail(email)) {
-                return res.status(403).json({ 'error': 'Email Invalid' });
+                res.json({ 'error': 'Email Invalid' });
+                res.status(403);
+                res.end();
             }
             if (!validatePassword(password)) {
-                return res.status(403).json({ 'error': 'Password Invalid' });
+                res.json({ 'error': 'Password Invalid' });
+                res.status(403);
+                res.end();
             }
             if (!validateNonNullNumberID(universityID)){
-                return res.status(403).json({ 'error': 'University ID Invalid' });
+                res.json({ 'error': 'University ID Invalid' });
+                res.status(403);
+                res.end();
             }
 
             // email needs to end in an approved domain
             const { domain } = await UniversityInfo.findOne({ 'universityID': universityID }, {});
             const emailDomain = email.trim().split('@')[1];
             if (domain !== emailDomain) { 
-                return res.status(403).json({ 'error': "University and Domain must match" });
+                res.json({ 'error': "University and Domain must match" });
+                res.status(403);
+                res.end();
             }
             if (domain) {
                 // Validate if user exist in our database
                 const oldUser = await UserInfo.findOne({ email });
 
                 if (oldUser) {
-                    return res.status(409).send("User Already Exist. Please Login");
+                    res.send("User Already Exist. Please Login");
+                    res.status(409);
+                    res.end();
                 }
 
 
@@ -82,20 +96,26 @@ router.post('/', async (req, res) => {
                 };
 
                 // return new user
-                res.status(201).json({ user: userReturned });
+                res.json({ user: userReturned });
+                res.status(201);
+                res.end();
             }
             else {
-                // check this status code..
-                res.status(403).json({ 'error': 'Email Domain Does Not Match Accepted' });
+                res.json({ 'error': 'Email Domain Does Not Match Accepted' });
+                res.status(403);
+                res.end();
             }
         }
         else {
-            // check this status code..
-            res.status(403).json({ 'error': 'All Input Not Found, Please Check Your Request' });
+            res.json({ 'error': 'All Input Not Found, Please Check Your Request' });
+            res.status(403);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": ""+error});
+        res.json({"error": ""+error});
+        res.status(500);
+        res.end();
     }
     // Our register logic ends here
 });

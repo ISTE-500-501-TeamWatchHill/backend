@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { TeamInfo, UserInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
-const { validateNonNullStringHashID, validateNonNullNumberID, validateEmail, validateName } = require('../auth/validation');
+const { validateNonNullNumberID, validateEmail, validateName } = require('../auth/validation');
 let ObjectId = require("bson-objectid");
 
 /*
@@ -35,23 +35,27 @@ router.post('/', async (req, res) => {
             }
 
             if (!validateName(name)) {
-                res.status(403).json({'error': 'Invalid Team Name Provided'});
+                res.json({'error': 'Invalid Team Name Provided'});
+                res.status(403);
                 res.end();
             }
 
             const teamExistsCheck = await TeamInfo.findOne({ description: name });
             if (teamExistsCheck && teamExistsCheck._id) {
-                res.status(403).json({'error': 'Team Name Provided Already Exists'});
+                res.json({'error': 'Team Name Provided Already Exists'});
+                res.status(403);
                 res.end();
             }
 
             if (!validateNonNullNumberID(universityID)) {
-                res.status(403).json({'error': 'Invalid University ID Provided'});
+                res.json({'error': 'Invalid University ID Provided'});
+                res.status(403);
                 res.end();
             }
 
             if (emails.length < 1 || emails.length > 5) {
-                res.status(403).json({'error': 'Invalid number of emails provided; must be between 1 and 5 users.'});
+                res.json({'error': 'Invalid number of emails provided; must be between 1 and 5 users.'});
+                res.status(403);
                 res.end();
             }
 
@@ -59,7 +63,8 @@ router.post('/', async (req, res) => {
             const validateUsers = async () => {
                 for (const email of emails) {
                     if (!validateEmail(email)) {
-                        res.status(403).json({'error': 'Invalid Player Email Provided: ' + email});
+                        res.json({'error': 'Invalid Player Email Provided: ' + email});
+                        res.status(403);
                         res.end();
                     }
 
@@ -74,7 +79,8 @@ router.post('/', async (req, res) => {
                     if (user && user._id && (user.universityID == universityID) && (user.teamID == null)) {
                         confirmedUsers.push(user._id);
                     } else {
-                        res.status(403).json({'error': 'User already on a team: ' + email});
+                        res.json({'error': 'User already on a team: ' + email});
+                        res.status(403);
                         res.end();
                     } 
                 };
@@ -98,21 +104,26 @@ router.post('/', async (req, res) => {
                     }
                 };
                 await addTeamIdToUsers();
-                res.status(200).json(dataToSave);
+                res.json(dataToSave);
+                res.status(200);
                 res.end();
             }
             catch (error) {
-                res.status(500).json({'error': "" + error});
+                res.json({'error': "" + error});
+                res.status(500);
                 res.end();
             }
             
         } else {
-            res.status(500).json({'error': "missing inputs"});
+            res.json({'error': "missing inputs"});
+            res.status(500);
             res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": error});
+        res.json({"error": error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -126,17 +137,20 @@ router.put('/', async (req, res) => {
                 const { universityID, emails, description, approvalStatus } = req.body.updatedData;
                 // validate and reformat input emails
                 if (!validateName(description)) {
-                    res.status(403).json({'error': 'Invalid Team Name Provided'});
+                    res.json({'error': 'Invalid Team Name Provided'});
+                    res.status(403);
                     res.end();
                 }
     
                 if (!validateNonNullNumberID(universityID)) {
-                    res.status(403).json({'error': 'Invalid University ID Provided'});
+                    res.json({'error': 'Invalid University ID Provided'});
+                    res.status(403);
                     res.end();
                 }
     
                 if (emails.length < 1 || emails.length > 5) {
-                    res.status(403).json({'error': 'Invalid number of emails provided; must be between 1 and 5 users.'});
+                    res.json({'error': 'Invalid number of emails provided; must be between 1 and 5 users.'});
+                    res.status(403);
                     res.end();
                 }
 
@@ -144,7 +158,8 @@ router.put('/', async (req, res) => {
                 const validateUsers = async () => {
                     for (const email of emails) {
                         if (!validateEmail(email)) {
-                            res.status(400).json({'error': 'Invalid Player Email Provided: ' + email});
+                            res.json({'error': 'Invalid Player Email Provided: ' + email});
+                            res.status(400);
                             res.end();
                         }
 
@@ -208,15 +223,21 @@ router.put('/', async (req, res) => {
                 res.end();
             }
             else {
-                res.status(400).json({"error": "Team Not Found"});
+                res.json({"error": "Team Not Found"});
+                res.status(400);
+                res.end();
             }
         }
         else {
-            res.status(400).json({"error": "Incomplete Input"});
+            res.json({"error": "Incomplete Input"});
+            res.status(400);
+            res.end();
         }
     }
     catch (error) {
-        res.status(500).json({"error": ""+error});
+        res.json({"error": ""+error});
+        res.status(500);
+        res.end();
     }
 });
 
@@ -225,7 +246,9 @@ router.delete('/', async (req, res) => {
     try {
         if (req.user.roleID == 14139 || req.user.roleID == 21149) { // uni admin or company admin
             if (!ObjectId.isValid(req.body.id)) {
-                return res.status(403).json({ 'error': '`_id` Provided Invalid' });
+                res.json({ 'error': '`_id` Provided Invalid' });
+                res.status(403);
+                res.end();
             }
             try {
                 const teamToBeDeleted = await TeamInfo.findOne({"_id": ObjectId(req.body.id)});
