@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { UserInfo, TeamInfo, UniversityInfo } = require('../../model/model');
 require('dotenv').config(); //initialize dotenv
-const ObjectId = require("bson-objectid");
-const { validateNonNullStringHashID } = require('../auth/validation');
 
 // Get Unverified Teams
 router.get('/teams', async (req, res) => {
@@ -31,7 +29,7 @@ router.get('/teams', async (req, res) => {
 // Verify Team By ID
 router.put('/teams', async (req, res) => {
     if (req.user.roleID == 14139 || req.user.roleID == 21149 && req.body._id.length > 0) {
-        TeamInfo.updateOne({_id: req.body._id}, {$set: {approvalStatus: true}}, function (err, result) {
+        TeamInfo.updateOne({_id: req.body.id}, {$set: {approvalStatus: true}}, function (err, result) {
             if (err !== null) {
                 res.json(err);
                 res.status(500);
@@ -77,7 +75,7 @@ router.get('/universities', async (req, res) => {
 // Verify University By ID
 router.put('/universities', async (req, res) => {
     if (req.user.roleID == 14139 || req.user.roleID == 21149 && req.body._id.length > 0) {
-        UniversityInfo.updateOne({_id: req.body._id}, {$set: {approvalStatus: true}}, function (err, result) {
+        UniversityInfo.updateOne({_id: req.body.id}, {$set: {approvalStatus: true}}, function (err, result) {
             if (err !== null) {
                 res.json(err);
                 res.status(500);

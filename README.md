@@ -110,7 +110,7 @@ run npm install -g jest
 * Request Body:
 ```
 {
-    _id: [String, mongo doc ID of team to be verified]
+    id: [String, mongo doc ID of team to be verified]
 }
 ```
 * Response Body:
@@ -131,9 +131,7 @@ run npm install -g jest
 * Authorization: Header Token, Company Admin
 * Request Body:
 ```
-{
-
-}
+{ empty }
 ```
 * Response Body:
 ```
@@ -162,7 +160,7 @@ run npm install -g jest
 * Request Body:
 ```
 {
-    _id: [String, mongo doc ID of university to be verified]
+    id: [String, mongo doc ID of university to be verified]
 }
 ```
 * Response Body:
