@@ -250,21 +250,23 @@ router.put('/', async (req, res) => {
                 if (updUser) {
                     await UserInfo.updateOne({_id: updUser._id}, req.body)
                     .then(async function (data, err){
-                        const teamToAdd = async () => {
-                            await TeamInfo.updateOne({_id: req.body.teamID}, {$push: {players: updUser._id}});
-                        }
-                        teamToAdd();
-                        if (err) {
-                            res.json(err+"");
-                            res.status(500);
-                            res.end();
-                        }
-                        else {
-                            const updated = await UserInfo.findOne({_id: ObjectId(req.body.id)});
-                            res.json({updated});
-                            res.status(200);
-                            res.end();
-                        }                       
+                        if (updUser.teamID!==req.body.teamID) {
+                            const teamToAdd = async () => {
+                                await TeamInfo.updateOne({_id: req.body.teamID}, {$push: {players: updUser._id}});
+                            }
+                            teamToAdd();
+                            if (err) {
+                                res.json(err+"");
+                                res.status(500);
+                                res.end();
+                            }
+                            else {
+                                const updated = await UserInfo.findOne({_id: ObjectId(req.body.id)});
+                                res.json({updated});
+                                res.status(200);
+                                res.end();
+                            }  
+                        }                     
                     });
                 }
                 else {
