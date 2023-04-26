@@ -250,7 +250,7 @@ router.put('/', async (req, res) => {
                 if (updUser) {
                     await UserInfo.updateOne({_id: updUser._id}, req.body)
                     .then(async function (data, err){
-                        if (updUser.teamID!==req.body.teamID) {
+                        if (updUser.teamID.toString()!==req.body.teamID) {
                             const teamToAdd = async () => {
                                 await TeamInfo.updateOne({_id: req.body.teamID}, {$push: {players: updUser._id}});
                             }
@@ -266,7 +266,12 @@ router.put('/', async (req, res) => {
                                 res.status(200);
                                 res.end();
                             }  
-                        }                     
+                        } else {
+                            const updated = await UserInfo.findOne({_id: ObjectId(req.body.id)});
+                            res.json({updated});
+                            res.status(200);
+                            res.end();
+                        }                      
                     });
                 }
                 else {
