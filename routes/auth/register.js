@@ -91,7 +91,10 @@ router.post('/', async (req, res) => {
                 const userReturned = {
                     "firstName": user.firstName,
                     "lastName": user.lastName,
+                    "role": user.roleID,
                     "email": user.email,
+                    "universityID": user.universityID,
+                    "teamID": user.teamID,
                     "token": token,
                 };
 
